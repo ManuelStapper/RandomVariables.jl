@@ -115,11 +115,9 @@ struct oc <: Interval
 end
 
 # For vector-wise evaluations
-import Base.length
 function length(x::T) where {T <: Interval}
     return 1
 end
-import Base.iterate
 function iterate(x::T) where {T <: Interval}
     (1.00, nothing)
 end
@@ -127,7 +125,6 @@ function iterate(x::T, nothing) where {T <: Interval}
 
 end
 
-import Base.copy
 function copy(x::T) where {T <: Interval}
     if x == emptyset()
         return emptyset()
@@ -183,11 +180,10 @@ struct rect <: Cuboid
     end
 end
 
-import Base.length
 function length(x::T) where {T <: Cuboid}
     return 1
 end
-import Base.iterate
+
 function iterate(x::T) where {T <: Cuboid}
     (1.00, nothing)
 end
@@ -195,7 +191,6 @@ function iterate(x::T, nothing) where {T <: Cuboid}
 
 end
 
-import Base.ndims
 """
     ndims(x <: Cuboid)::Int64
 
@@ -205,7 +200,6 @@ function ndims(x::T)::Int64 where {T <: Cuboid}
     return x.ndims
 end
 
-import Base.copy
 function copy(x::T) where {T <: Cuboid}
     return typeof(x)(x.lims, x.ndims)
 end

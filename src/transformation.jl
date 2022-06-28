@@ -1,23 +1,3 @@
-using Distributions
-
-cd("C:\\Users\\stapperm\\sciebo\\Arbeit\\Projects\\RandomVariables")
-
-include("interval.jl")
-include("subset.jl")
-include("union.jl")
-include("intersect.jl")
-include("complement.jl")
-include("diffs.jl")
-include("RandomVariable.jl")
-include("events.jl")
-include("setAlgebra2.jl")
-include("probability.jl")
-include("operators.jl")
-
-import Base.+, Base.-, Base.*, Base./, Base.inv, Base.exp, Base.log, Base.sqrt
-import Base.abs, Base.^
-
-
 """
     +(X::RandomVariable, y::Real)
     +(y::Real, X::RandomVariable)
@@ -214,7 +194,6 @@ end
 end
 
 # To include the left division operator
-import Base.adjoint
 function adjoint(x::RandomVariable)
     return x
 end
@@ -488,7 +467,6 @@ end
 
 # Now operators to create events
 # Operators that create events
-import Base.<, Base.>, Base.<=, Base.>=, Base.==, Base.!=, Base.in
 # Random variable on the left hand side
 (<)(X::RVtransformed, y::T) where {T <: Real} = begin
     event(RV(X.distr, X.id), X.fInv([oo(-Inf, y)]))

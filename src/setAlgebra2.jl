@@ -1,16 +1,3 @@
-using Distributions
-
-cd("C:\\Users\\stapperm\\sciebo\\Arbeit\\Projects\\RandomVariables")
-
-include("interval.jl")
-include("subset.jl")
-include("union.jl")
-include("intersect.jl")
-include("complement.jl")
-include("diffs.jl")
-include("RandomVariable.jl")
-include("events.jl")
-
 # Goal: Function to create union of two interval sets (cuboids) such that
 # the output is a vector of disjoint cuboids
 # Some prep functions needed
@@ -94,7 +81,6 @@ end
 # If merge = true, then the resulting cuboids are checked whether they can be
 # unioned to one cuboid
 
-import Base.reduce
 """
     reduce(x::Vector{Cuboid}, merge::Bool)
 

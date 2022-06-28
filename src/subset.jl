@@ -1,12 +1,6 @@
-cd("C:\\Users\\stapperm\\sciebo\\Arbeit\\Projects\\RandomVariables")
-
-include("interval.jl")
-
-# Function to check for subsets
 # Input: two intervals x and y
 # Output: true if x ⊆ y and false otherwise
 
-import Base.issubset
 # For two intervals of the same type
 
 """

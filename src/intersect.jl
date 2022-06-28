@@ -1,12 +1,5 @@
-cd("C:\\Users\\stapperm\\sciebo\\Arbeit\\Projects\\RandomVariables")
-
-include("interval.jl")
-include("union.jl")
-
 # Intersection of intervals
 # For two intervals x and y, returns a sinlge interval as output
-import Base.intersect
-
 """
     intersect(x::Interval, y::Interval)
     x ∩ y

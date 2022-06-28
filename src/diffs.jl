@@ -1,12 +1,3 @@
-cd("C:\\Users\\stapperm\\sciebo\\Arbeit\\Projects\\RandomVariables")
-
-include("interval.jl")
-include("subset.jl")
-include("union.jl")
-include("intersect.jl")
-include("complement.jl")
-
-import Base.\, Base.diff
 """
     diff(x::Interval, y::Interval)
     diff(x::Cuboid, y::Cuboid)

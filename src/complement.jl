@@ -1,9 +1,3 @@
-cd("C:\\Users\\stapperm\\sciebo\\Arbeit\\Projects\\RandomVariables")
-
-include("interval.jl")
-include("union.jl")
-include("intersect.jl")
-
 # Set complement
 """
     not(x::Interval)

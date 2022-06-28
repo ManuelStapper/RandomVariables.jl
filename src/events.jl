@@ -1,10 +1,3 @@
-using Distributions
-
-cd("C:\\Users\\stapperm\\sciebo\\Arbeit\\Projects\\RandomVariables")
-
-include("interval.jl")
-include("RandomVariable.jl")
-
 # X:        Vector of independent random variables
 # intevals: Vector of events such that each element in "intervals" contains as
 #           many intervals as there are RVs in "X". The length of "intervals" might

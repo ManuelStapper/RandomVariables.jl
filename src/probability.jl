@@ -1,17 +1,3 @@
-using Distributions
-
-cd("C:\\Users\\stapperm\\sciebo\\Arbeit\\Projects\\RandomVariables")
-
-include("interval.jl")
-include("subset.jl")
-include("union.jl")
-include("intersect.jl")
-include("complement.jl")
-include("diffs.jl")
-include("RandomVariable.jl")
-include("events.jl")
-include("setAlgebra2.jl")
-
 # Probabilities of single events
 # Caution for discrete distributions
 function P(X::T1, y::cc) where {T1 <: DiscreteDistribution}

@@ -1,7 +1,3 @@
-using Distributions
-
-cd("C:\\Users\\stapperm\\sciebo\\Arbeit\\Projects\\RandomVariables")
-
 # Random variable defined by its distribution and an ID
 # Same id indicates same random variable
 # Different ids are treated as stochastic independent variables
@@ -45,7 +41,6 @@ function RV(distr::T1)::RV where {T1 <: UnivariateDistribution}
     return RV(distr, id)
 end
 
-import Base.copy
 function copy(x::RV)
     return RV(x.distr, x.id)
 end

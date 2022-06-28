@@ -1,14 +1,9 @@
-cd("C:\\Users\\stapperm\\sciebo\\Arbeit\\Projects\\RandomVariables")
-
-include("interval.jl")
-
 # Union of intervals
 # Input: Two intervals x and y
 # Output: always vector of intervals
 #         If x and y do not overlap, it returns a vector of two
 #         If x and y overlap, it returns a vetor of length one
 
-import Base.union
 """
     union(x::Interval, y::Interval)
     x ∪ y

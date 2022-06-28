@@ -1,23 +1,5 @@
-using Distributions
-
-cd("C:\\Users\\stapperm\\sciebo\\Arbeit\\Projects\\RandomVariables")
-
-include("interval.jl")
-include("subset.jl")
-include("union.jl")
-include("intersect.jl")
-include("complement.jl")
-include("diffs.jl")
-include("RandomVariable.jl")
-include("events.jl")
-include("setAlgebra2.jl")
-include("probability.jl")
-
-
 # Operators that create events
-import Base.<, Base.>, Base.<=, Base.>=, Base.==, Base.!=, Base.in
-import Base.!, Base.|, Base.&, Base.⊻
-# Random variable on the left hand side
+
 """
     <(X::RV, y::Real)
     <(y::Real, X::RV)
