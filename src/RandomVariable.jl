@@ -1,7 +1,8 @@
+using Distributions
+
 # Random variable defined by its distribution and an ID
 # Same id indicates same random variable
 # Different ids are treated as stochastic independent variables
-
 """
     RandomVariable::DataType
 

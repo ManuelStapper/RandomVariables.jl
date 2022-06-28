@@ -1,5 +1,6 @@
-# Operators that create events
+using Distributions
 
+# Operators that create events
 """
     <(X::RV, y::Real)
     <(y::Real, X::RV)

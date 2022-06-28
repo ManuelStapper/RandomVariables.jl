@@ -1,3 +1,5 @@
+using Distributions
+
 # X:        Vector of independent random variables
 # intevals: Vector of events such that each element in "intervals" contains as
 #           many intervals as there are RVs in "X". The length of "intervals" might

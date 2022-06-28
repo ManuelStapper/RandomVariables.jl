@@ -1,3 +1,5 @@
+using Distributions
+
 """
     +(X::RandomVariable, y::Real)
     +(y::Real, X::RandomVariable)

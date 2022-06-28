@@ -1,3 +1,5 @@
+using Distributions
+
 # Goal: Function to create union of two interval sets (cuboids) such that
 # the output is a vector of disjoint cuboids
 # Some prep functions needed
