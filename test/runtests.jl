@@ -3,8 +3,8 @@ using Test
 
 @testset "RandomVariables.jl" begin
     X1 = RV(Poisson(4.2))
-    X2 = Normal()
-    X3 = Normal(1, 2)
+    X2 = RV(Normal())
+    X3 = RV(Normal(1, 2))
 
     A = (X1 in 1:5) & (X2 < 3) & (X2 > 0)
     B = (X1 != 2) & (log(X1 + 1) < 10)
