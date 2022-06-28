@@ -28,5 +28,4 @@ export cuboid, rect, ndims, <, <= , >, >=, ==, !=, in, !, &, |, ∨, ⊻
 export P, RandomVariable, RV, RVtransformed, unionDisjoint, reduce
 export union, issubset, +, -, *, /, inv, exp, log, sqrt, abs, adjoint, ^
 
-
 end

@@ -3,8 +3,12 @@ uuid = "23df5be6-c24a-401c-9bab-7363c0ab302a"
 authors = ["Manuel Stapper"]
 version = "0.1.0"
 
+[deps]
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+
 [compat]
 julia = "1"
+Distributions = "0.25"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

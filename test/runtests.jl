@@ -1,4 +1,4 @@
-using Main.RandomVariables
+using RandomVariables
 using Test
 
 @testset "RandomVariables.jl" begin
