@@ -47,7 +47,6 @@ function issubset(x::cc, y::co)::Bool
     return false
 end
 
-
 function issubset(x::cc, y::oc)::Bool
     if (y.l < x.l <= y.u) & (y.l <= x.u <= y.u)
         return true
@@ -56,7 +55,7 @@ function issubset(x::cc, y::oc)::Bool
 end
 
 function issubset(x::oo, y::cc)::Bool
-    if (y.l < x.l < y.u) & (y.l < x.u <= y.u)
+    if (y.l <= x.l <= y.u) & (y.l <= x.u <= y.u)
         return true
     end
     return false
@@ -91,7 +90,7 @@ function issubset(x::co, y::oo)::Bool
 end
 
 function issubset(x::co, y::oc)::Bool
-    if (y.l < x.l < y.u) & (y.l <= x.u <= y.u)
+    if (y.l < x.l <= y.u) & (y.l <= x.u <= y.u)
         return true
     end
     return false
@@ -112,7 +111,7 @@ function issubset(x::oc, y::oo)::Bool
 end
 
 function issubset(x::oc, y::co)::Bool
-    if (y.l <= x.l <= y.u) & (y.l < x.u < y.u)
+    if (y.l <= x.l <= y.u) & (y.l <= x.u < y.u)
         return true
     end
     return false
