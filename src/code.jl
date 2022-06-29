@@ -1,6 +1,6 @@
 using RandomVariables
 
-pathof(RandomVariables)
+cc(1, 2)
 
 X1 = RV(Poisson(4.2))
 X2 = RV(Normal())
