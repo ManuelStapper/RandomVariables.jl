@@ -1,4 +1,4 @@
-using RandomVariables
+using RandomVariables, Distribtutions
 using Test
 
 @testset "RandomVariables.jl" begin
