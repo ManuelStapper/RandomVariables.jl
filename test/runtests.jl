@@ -1,4 +1,7 @@
-using RandomVariables, Distribtutions
+import Pkg
+Pkg.add("Distributions")
+
+using RandomVariables, Distributions
 using Test
 
 @testset "RandomVariables.jl" begin
