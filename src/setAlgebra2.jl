@@ -57,27 +57,14 @@ A function that splits the real numbers into disjoint intervals such that the
 intervals `x` and `y` are elements of the output.
 """
 function unionDisjoint(x::T1, y::T2)::Vector{Interval} where {T1, T2 <: Interval}
-    intVec1 = unionDisjoint(x)
-    intVec2 = unionDisjoint(y)
-
-    n1 = length(intVec1)
-    n2 = length(intVec2)
-    n = n1 + n2
-    outRaw = Vector{Interval}(undef, n1*n2)
-    counter = 1
-    for i = 1:length(intVec1), j = 1:length(intVec2)
-        outRaw[counter] = intVec1[i] ∩ intVec2[j]
-        counter += 1
+    out = unique([x ∩ y; sdiff(x, y); not(x ∪ y)])
+    keep = out .!= [emptyset()]
+    if any(keep)
+        return out[keep]
+    else
+        return [emptyset()]
     end
-    isempty = fill(false, length(outRaw))
-    for i = 1:length(outRaw)
-        if outRaw[i] == emptyset()
-            isempty[i] = true
-        end
-    end
-    return outRaw[.!isempty]
 end
-
 # Function to remove empty sets and intervals that contain other intervals
 # Only important for the unionDisjoint
 # If merge = true, then the resulting cuboids are checked whether they can be
@@ -288,27 +275,27 @@ function diff(x::T1, y::T2)::Vector{Cuboid} where {T1, T2 <: Cuboid}
     temp = unionDisjoint(x, y)
     keep = fill(true, length(temp))
     for i = 1:length(temp)
-        if temp[i] ⊆ y
+        if (temp[i] ⊆ y) | !(temp[i] ⊆ x)
             keep[i] = false
         end
     end
-    return temp[keep]
+    if any(keep)
+        return temp[keep]
+    else
+        return [emptyset()]
+    end
 end
 
 (\)(x::T1, y::T2) where {T1, T2 <: Cuboid} = begin
-    temp = unionDisjoint(x, y)
-    keep = fill(true, length(temp))
-    for i = 1:length(temp)
-        if temp[i] ⊆ y
-            keep[i] = false
-        end
-    end
-    return temp[keep]
+    diff(x, y)
 end
 
 function sdiff(x::T1, y::T2)::Vector{Cuboid} where {T1, T2 <: Cuboid}
     union((x\y), (y\x))
 end
+
+
+
 
 
 # Union of two events, potentially involving different random variables

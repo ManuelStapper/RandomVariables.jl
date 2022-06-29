@@ -595,10 +595,6 @@ function abs(X::T) where {T <: UnivariateDistribution}
     abs(RV(X))
 end
 
-function inv(X::T) where {T <: UnivariateDistribution}
-    inv(RV(X))
-end
-
 (^)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
     RV(X)^y
 end
