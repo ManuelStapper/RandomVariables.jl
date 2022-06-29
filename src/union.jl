@@ -225,6 +225,11 @@ function union(x::Vector{T})::Vector{Interval} where {T <: Interval}
     # In an overlap is found, replace one interval by the union and remove
     # the other
     isempty = fill(false, n)
+    for i = 1:n
+        if out[i] == emptyset()
+            isempty[i] = true
+        end
+    end
     while true
         changedOne = false
         for i = 1:n-1
@@ -249,7 +254,11 @@ function union(x::Vector{T})::Vector{Interval} where {T <: Interval}
             end
         end
         if !changedOne
-            return out[.!isempty]
+            if any(.!isempty)
+                return out[.!isempty]
+            else
+                return [emptyset()]
+            end
         end
     end
 end

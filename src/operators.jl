@@ -196,19 +196,19 @@ end
 end
 
 (in)(X::T1, y::Vector{T2}) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    event(X, (z -> cc(z, z)).(y))
+    event(RV(X), (z -> cc(z, z)).(y))
 end
 
 (in)(X::T, y::UnitRange) where {T <: UnivariateDistribution} = begin
-    event(X, (z -> cc(z, z)).(collect(y)))
+    event(RV(X), (z -> cc(z, z)).(collect(y)))
 end
 
 (in)(X::T, y::StepRange) where {T <: UnivariateDistribution} = begin
-    event(X, (z -> cc(z, z)).(collect(y)))
+    event(RV(X), (z -> cc(z, z)).(collect(y)))
 end
 
 (in)(X::T, y::StepRangeLen) where {T <: UnivariateDistribution} = begin
-    event(X, (z -> cc(z, z)).(collect(y)))
+    event(RV(X), (z -> cc(z, z)).(collect(y)))
 end
 
 
