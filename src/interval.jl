@@ -40,6 +40,19 @@ struct cc <: Interval
         if !isfinite(l) & !isfinite(u) & (sign(u) == sign(l))
             return emptyset()
         end
+        if isfinite(l)
+            if isfinite(u)
+                return new(l, u)
+            else
+                return co(l, u)
+            end
+        else
+            if isfinite(u)
+                return oc(-Inf, u)
+            else
+                return oo(-Inf, Inf)
+            end
+        end
         return new(float(l), float(u))
     end
 end
@@ -87,7 +100,12 @@ struct co <: Interval
         if !isfinite(l) & !isfinite(u) & (sign(u) == sign(l))
             return emptyset()
         end
-        return new(float(l), float(u))
+        if isfinite(l)
+            return new(float(l), float(u))
+        else
+            return oo(l, u)
+        end
+
     end
 end
 
@@ -110,7 +128,11 @@ struct oc <: Interval
         if !isfinite(l) & !isfinite(u) & (sign(u) == sign(l))
             return emptyset()
         end
-        return new(float(l), float(u))
+        if isfinite(u)
+            return new(float(l), float(u))
+        else
+            return oo(l, u)
+        end
     end
 end
 
