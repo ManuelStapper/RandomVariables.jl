@@ -42,7 +42,7 @@ Z = X * y. Instead of a random variable, a distribution can be provided and a
 new random variable is created.
 """
 (*)(X::T1, y::T2) where {T1 <: RandomVariable, T2 <: Real} = begin
-    if y > 0
+    if y != 0
         fInv = function(z::Vector{T3}) where {T3 <: Interval}
             out = Vector{Interval}(undef, length(z))
             for i = 1:length(z)
@@ -54,25 +54,7 @@ new random variable is created.
             end
             return union(out)
         end
-    elseif y < 0
-        fInv = function(z::Vector{T3}) where {T3 <: Interval}
-            out = Vector{Interval}(undef, length(z))
-            for i = 1:length(z)
-                if z[i] != emptyset()
-                    if typeof(z[i]) in [cc, oo]
-                        out[i] = typeof(z[i])(z[i].u/y, z[i].l/y)
-                    elseif typeof(z[i]) == co
-                        out[i] = oc(z[i].u/y, z[i].l/y)
-                    elseif typeof(z[i]) == oc
-                        out[i] = co(z[i].u/y, z[i].l/y)
-                    end
-                else
-                    out[i] = emptyset()
-                end
-            end
-            return union(out)
-        end
-    elseif y == 0
+    else
         fInv = function(z::Vector{T3}) where {T3 <: Interval}
             for i = 1:length(z)
                 if z[i] != emptyset()
@@ -154,11 +136,7 @@ function inv(X::T) where {T <: RandomVariable}
                             out[i, 2] = oo(1/z[i].u, Inf)
                         end
                     else
-                        if typeof(z[i]) in [cc, oo]
-                            out[i, 1] = typeof(z[i])(1/z[i].u, 1/z[i].l)
-                        else
-                            out[i, 1] = ifelse(typeof(z[i]) == co, oc, co)(1/z[i].u, 1/z[i].l)
-                        end
+                        out[i, 1] = typeof(z[i])(1/z[i].l, 1/z[i].u)
                     end
                 end
             end
@@ -325,11 +303,7 @@ function abs(X::T) where {T <: RandomVariable}
                     if z[i].u >= 0
                         if z[i].l >= 0
                             out[i, 1] = z[i]
-                            if typeof(z[i]) in [cc, oo]
-                                out[i, 2] = typeof(z[i])(-z[i].u, -z[i].l)
-                            else
-                                out[i, 2] = ifelse(typeof(z[i]) == co, oc, co)(-z[i].u, -z[i].l)
-                            end
+                            out[i, 2] = typeof(z[i])(-z[i].l, -z[i].u)
                         else
                             if typeof(z[i]) in [cc, oc]
                                 out[i, 1] = cc(-z[i].u, z[i].u)
@@ -360,11 +334,7 @@ function powI(X::T, y::Integer) where {T <: RandomVariable}
                         if z[i].u >= 0
                             if z[i].l >= 0
                                 out[i, 1] = typeof(z[i])(z[i].l^(1/y), z[i].u^(1/y))
-                                if typeof(z[i]) in [cc, oo]
-                                    out[i, 2] = typeof(z[i])(-(z[i].u^(1/y)), -(z[i].l^(1/y)))
-                                else
-                                    out[i, 2] = ifelse(typeof(z[i]) == co, oc, co)(-(z[i].u)^(1/y), -(z[i].l)^(1/y))
-                                end
+                                out[i, 2] = typeof(z[i])(-(z[i].l^(1/y)), -(z[i].u^(1/y)))
                             else
                                 if typeof(z[i]) in [cc, oc]
                                     out[i, 1] = cc(-(z[i].u^(1/y)), z[i].u^(1/y))
