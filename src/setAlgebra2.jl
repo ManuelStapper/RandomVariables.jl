@@ -130,11 +130,28 @@ function mergeCuboid(x::T1, y::T2)::Vector{Cuboid} where {T1, T2 <: Cuboid}
     return [x, y]
 end
 
+# another helper function
+function mergeOne(x::Vector{T1}) where {T1 <: Cuboid}
+    if length(x) == 1
+        return x
+    end
+
+    for i = 1:length(x) - 1
+        for j = i+1:length(x)
+            temp = mergeCuboid(x[i], x[j])
+            if length(temp) == 1
+                return [x[setdiff(1:length(x), [i, j])]; temp[1]]
+            end
+        end
+    end
+    return x
+end
+
+
 # Function to remove empty sets and intervals that contain other intervals
 # Only important for the unionDisjoint
 # If merge = true, then the resulting cuboids are checked whether they can be
 # unioned to one cuboid
-
 """
     reduce(x::Vector{Cuboid}, merge::Bool)
 

@@ -116,7 +116,7 @@ function union(x::cc, y::oc)::Vector{Interval}
     if (y.l < x.l <= y.u) & (y.l <= x.u <= y.u)
         return [y]
     end
-    if x.l < y.l
+    if x.l <= y.l
         return [cc(x.l, y.u)]
     else
         return [oc(y.l, x.u)]
