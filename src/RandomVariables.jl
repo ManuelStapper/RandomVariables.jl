@@ -3,7 +3,7 @@ module RandomVariables
 using Distributions
 
 import Base.\, Base.diff, Base.intersect, Base.length, Base.iterate
-import Base.copy, Base.ndims, Base.reduce, Base.issubset, Base.union
+import Base.copy, Base.ndims, Base.reduce, Base.issubset, Base.union, Base.xor
 import Base.<, Base.>, Base.<=, Base.>=, Base.==, Base.!=, Base.in
 import Base.!, Base.|, Base.&, Base.⊻
 import Base.+, Base.-, Base.*, Base./, Base.inv, Base.exp, Base.log, Base.sqrt
@@ -22,7 +22,7 @@ include("probability.jl")
 include("operators.jl")
 include("transformation.jl")
 
-export not, diff, \, sdiff, event, eventConditional, intersect, Interval
+export not, diff, \, xor, event, eventConditional, intersect, Interval
 export emptyset, ∅, cc, oo, co, oc, length, iterate, copy, Cuboid
 export cuboid, rect, ndims, <, <= , >, >=, ==, !=, in, !, &, |, ∨, ⊻
 export P, RandomVariable, RV, RVtransformed, unionDisjoint, reduce

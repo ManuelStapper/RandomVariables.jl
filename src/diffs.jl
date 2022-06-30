@@ -19,11 +19,11 @@ end
 end
 
 """
-    sdiff(x::Interval, y::Interval)
-    sdiff(x::Cuboid, y::Cuboid)
-    sdiff(x::Vector{Cuboid}, y::Vector{Cuboid}, merge::Bool)
-    sdiff(x::Vector{Cuboid}, y::Cuboid, merge::Bool)
-    sdiff(x::Cuboid, y::Vector{Cuboid}, merge::Bool)
+    xor(x::Interval, y::Interval)
+    xor(x::Cuboid, y::Cuboid)
+    xor(x::Vector{Cuboid}, y::Vector{Cuboid}, merge::Bool)
+    xor(x::Vector{Cuboid}, y::Cuboid, merge::Bool)
+    xor(x::Cuboid, y::Vector{Cuboid}, merge::Bool)
     x ⊻ y
 
 Symmetric difference operator for two intervals or (vectors of) cuboids.
@@ -31,6 +31,6 @@ Returns a vector of intervals or cuboids that are in `x` but not in `y` or
 in `y` but not in `x`.
 If `merge` is true, the resulting cuboids are checked if they can be merged.
 """
-function sdiff(x::T1, y::T2)::Vector{Interval} where {T1, T2 <: Interval}
+function xor(x::T1, y::T2)::Vector{Interval} where {T1, T2 <: Interval}
     union([(x\y); (y\x)])
 end

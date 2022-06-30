@@ -320,10 +320,10 @@ end
 end
 
 """
-    \\(A::event, B::event)
-    \\(A::eventConditional, B::eventConditional)
-    \\(A::event, B::eventConditional)
-    \\(A::eventConditional, B::event)
+    diff(A::event, B::event)
+    diff(A::eventConditional, B::eventConditional)
+    diff(A::event, B::eventConditional)
+    diff(A::eventConditional, B::event)
     A \\ B
 
 Combination of two events. Returns the event that `A` occurs and `B` does not.
@@ -358,19 +358,14 @@ In case of conditional events, say A1|A2 and B1|B2, the resulting event ist
 A1 ⊻ B1 | A2 ∩ B2.
 """
 (⊻)(A::event, B::event) = begin
-    sdiff(A, B)
+    xor(A, B)
 end
 (⊻)(A::eventConditional, B::eventConditional) = begin
-    sdiff(A.of, B.of) | intersect(A.given, B.given)
+    xor(A.of, B.of) | intersect(A.given, B.given)
 end
 (⊻)(A::event, B::eventConditional) = begin
-    sdiff(A, B.of) | B.given
+    xor(A, B.of) | B.given
 end
 (⊻)(A::eventConditional, B::event) = begin
-    sdiff(A.of, B) | A.given
+    xor(A.of, B) | A.given
 end
-
-
-A = X > 1
-B = Y < 2
-C = X >= 0

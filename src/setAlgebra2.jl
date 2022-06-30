@@ -55,7 +55,7 @@ A function that splits the real numbers into disjoint intervals such that the
 intervals `x` and `y` are elements of the output.
 """
 function unionDisjoint(x::T1, y::T2)::Vector{Interval} where {T1, T2 <: Interval}
-    out = unique([x ∩ y; sdiff(x, y); not(x ∪ y)])
+    out = unique([x ∩ y; xor(x, y); not(x ∪ y)])
     keep = out .!= [emptyset()]
     if any(keep)
         return out[keep]
@@ -374,7 +374,7 @@ end
     diff(x, y)
 end
 
-function sdiff(x::T1, y::T2, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
+function xor(x::T1, y::T2, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
     out = union(x, y, false)
     keep = fill(false, length(out))
 
@@ -393,7 +393,7 @@ function sdiff(x::T1, y::T2, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <
     end
 end
 
-function sdiff(x::Vector{T1}, y::Vector{T2}, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
+function xor(x::Vector{T1}, y::Vector{T2}, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
     out = union(x, y, false)
     keep = fill(false, length(out))
 
@@ -412,12 +412,12 @@ function sdiff(x::Vector{T1}, y::Vector{T2}, merge::Bool = true)::Vector{Cuboid}
     end
 end
 
-function sdiff(x::Vector{T1}, y::T2, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
-    return sdiff(x, [y], merge)
+function xor(x::Vector{T1}, y::T2, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
+    return xor(x, [y], merge)
 end
 
-function sdiff(x::T1, y::Vector{T2}, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
-    return sdiff([x], y, merge)
+function xor(x::T1, y::Vector{T2}, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
+    return xor([x], y, merge)
 end
 
 """
@@ -574,12 +574,12 @@ end
 end
 
 """
-    sdiff(A::event, B::event)::event
-
+    xor(A::event, B::event)::event
+    A ⊻ B
 Symmetric difference of two events `A` and `B`. Gives the event that `A` occurs
 and `B` does not or that `B` occurs and `A` does not.
 """
-function sdiff(A::event, B::event)
+function xor(A::event, B::event)
     A1, B1 = unifyEvents(A, B)
-    return event(A1.X, sdiff(A1.cuboids, B1.cuboids))
+    return event(A1.X, xor(A1.cuboids, B1.cuboids))
 end
