@@ -1,5 +1,3 @@
-using Distributions
-
 # Probabilities of single events
 # Caution for discrete distributions
 function P(X::T1, y::cc) where {T1 <: DiscreteDistribution}

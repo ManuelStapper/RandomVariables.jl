@@ -129,3 +129,15 @@ function issubset(x::T1, y::T2)::Bool where {T1, T2 <: Cuboid}
     end
     return true
 end
+
+function issubset(x::T1, y::Vector{T2})::Bool where {T1, T2 <: Cuboid}
+    if !all(x.ndims .== (z -> z.ndims).(y))
+        return false
+    end
+    for i = 1:length(y)
+        if (x ⊆ y[i])
+            return true
+        end
+    end
+    return false
+end

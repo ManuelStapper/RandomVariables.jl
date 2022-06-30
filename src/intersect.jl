@@ -262,18 +262,27 @@ function intersect(x::T1, y::T2)::Cuboid where {T1, T2 <: Cuboid}
     if x.ndims != y.ndims
         error("Invalid dimensions")
     end
+    # Number of random variables
+    nRV = x.ndims
 
-    out = Vector{Interval}(undef, x.ndims)
-    for i = 1:x.ndims
-        out[i] = intersect(x.lims[i], y.lims[i])
+    ints = Vector{Interval}(undef, nRV)
+    for i = 1:nRV
+        ints[i] = intersect(x.lims[i], y.lims[i])
+        if ints[i] == emptyset()
+            return cuboid(fill(emptyset(), nRV))
+        end
     end
-    return cuboid(out, x.ndims)
+
+    return cuboid(ints)
 end
 
 function intersect(x::rect, y::rect)::rect
     out = Vector{Interval}(undef, 2)
     for i = 1:2
         out[i] = intersect(x.lims[i], y.lims[i])
+        if out[i] == emptyset()
+            return rect([emptyset(), emptyset()])
+        end
     end
     return rect(out)
 end

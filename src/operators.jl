@@ -1,5 +1,3 @@
-using Distributions
-
 # Operators that create events
 """
     <(X::RV, y::Real)
@@ -241,63 +239,138 @@ end
 # Operators involving one event
 """
     !(A::event)
+    !(A::eventConditional)
 
 Takes an event as input and return the counterevent.
 """
 function !(A::event)
     not(A)
 end
+function !(A::eventConditional)
+    not(A.of) | A.given
+end
 
 # Operators involving two events
 """
     &(A::event, B::event)
+    &(A::eventConditional, B::eventConditional)
+    &(A::event, B::eventConditional)
+    &(A::eventConditional, B::event)
     A & B
 
 Combination of two events. Returns the event that `A` and `B` occur.
+
+In case of conditional events, say A1|A2 and B1|B2, the resulting event ist
+A1 ∩ B1 | A2 ∩ B2.
 """
 (&)(A::event, B::event) = begin
     A ∩ B
 end
+(&)(A::eventConditional, B::eventConditional) = begin
+    (A.of ∪ B.of) | (A.conditional ∩ B.conditional)
+end
+(&)(A::event, B::eventConditional) = begin
+    (A ∪ B.of) | B.conditional
+end
+(&)(A::eventConditional, B::event) = begin
+    (A.of ∪ B) | A.conditional
+end
 
 """
     |(A::event, B::event)
+    |(A::eventConditional, B::event)
     A | B
 
 Combination of two events. Returns the event that `A` given that `B` occurs.
 Caution, this operator is not the "or" operator.
+If A is a conditional event, B is added as condition.
 
 See also: [`∨`](@ref)
 """
 (|)(A::event, B::event) = begin
     eventConditional(A, B)
 end
+(|)(A::eventConditional, B::event) = begin
+    eventConditional(A.of, A.given ∩ B)
+end
+
 
 """
     ∨(A::event, B::event)
+    ∨(A::eventConditional, B::eventConditional)
+    ∨(A::event, B::eventConditional)
+    ∨(A::eventConditional, B::event)
     A ∨ B
 
 Combination of two events. Returns the event that `A` or `B` occurs.
+In case of conditional events, say A1|A2 and B1|B2, the resulting event ist
+A1 ∪ B1 | A2 ∩ B2.
 """
 (∨)(A::event, B::event) = begin
     union(A, B)
 end
-
-"""
-    \\(A::event, B::event)
-    A \\ B
-
-Combination of two events. Returns the event that `A` occurs and `B` does not.
-"""
-(\)(A::event, B::event) = begin
-    A ∩ not(B)
+(∨)(A::eventConditional, B::eventConditional) = begin
+    union(A.of, B.of) | intersect(A.given, B.given)
+end
+(∨)(A::event, B::eventConditional) = begin
+    union(A, B.of) | B.given
+end
+(∨)(A::eventConditional, B::event) = begin
+    union(A.of, B) | A.given
 end
 
 """
+    \\(A::event, B::event)
+    \\(A::eventConditional, B::eventConditional)
+    \\(A::event, B::eventConditional)
+    \\(A::eventConditional, B::event)
+    A \\ B
+
+Combination of two events. Returns the event that `A` occurs and `B` does not.
+Combination of two events. Returns the event that `A` or `B` occurs.
+In case of conditional events, say A1|A2 and B1|B2, the resulting event ist
+A1 \\ B1 | A2 ∩ B2.
+"""
+(\)(A::event, B::event) = begin
+    intersect(A, not(B))
+end
+(\)(A::eventConditional, B::eventConditional) = begin
+    intersect(A.of, not(B.of)) | intersect(A.given, B.given)
+end
+(\)(A::event, B::eventConditional) = begin
+    intersect(A, not(B.of)) | B.given
+end
+(\)(A::eventConditional, B::event) = begin
+    intersect(A.of, not(B)) | A.given
+end
+
+
+
+"""
     ⊻(A::event, B::event)
+    ⊻(A::eventConditional, B::eventConditional)
+    ⊻(A::event, B::eventConditional)
+    ⊻(A::eventConditional, B::event)
     A ⊻ B
 Combination of two events. Returns the event that `A` occurs and `B` does not or
 `B` occurs and `A` does not.
+In case of conditional events, say A1|A2 and B1|B2, the resulting event ist
+A1 ⊻ B1 | A2 ∩ B2.
 """
 (⊻)(A::event, B::event) = begin
     sdiff(A, B)
 end
+(⊻)(A::eventConditional, B::eventConditional) = begin
+    sdiff(A.of, B.of) | intersect(A.given, B.given)
+end
+(⊻)(A::event, B::eventConditional) = begin
+    sdiff(A, B.of) | B.given
+end
+(⊻)(A::eventConditional, B::event) = begin
+    sdiff(A.of, B) | A.given
+end
+
+
+A = X > 1
+B = Y < 2
+C = X >= 0
