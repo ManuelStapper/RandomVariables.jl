@@ -1,5 +1,6 @@
 using RandomVariables
 using Test
+using Distributions
 
 @testset "RandomVariables.jl" begin
     X1 = RV(RandomVariables.Poisson(4.2))
