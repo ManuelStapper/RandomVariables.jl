@@ -267,13 +267,13 @@ A1 ∩ B1 | A2 ∩ B2.
     A ∩ B
 end
 (&)(A::eventConditional, B::eventConditional) = begin
-    (A.of ∪ B.of) | (A.conditional ∩ B.conditional)
+    (A.of ∪ B.of) | (A.given ∩ B.given)
 end
 (&)(A::event, B::eventConditional) = begin
-    (A ∪ B.of) | B.conditional
+    (A ∪ B.of) | B.given
 end
 (&)(A::eventConditional, B::event) = begin
-    (A.of ∪ B) | A.conditional
+    (A.of ∪ B) | A.given
 end
 
 """
