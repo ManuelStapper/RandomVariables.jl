@@ -71,4 +71,57 @@ using Distributions
     C = rect([cc(1, 2), cc(1, 2)])
     D = rect([oo(1, 2), oo(1, 2)])
     union(C, D)
+
+    X1 >= 1
+    X1 == 1
+    X1 in [1, 2]
+    X1 in 1:2:10
+    X1 in 1:2.0:10
+    1 < X1
+    1 <= X1
+    1 > X1
+    1 >= X1
+    1 == X1
+    1 != X1
+
+    A1 = X1 > 4
+    A2 = X1 > 3
+    A3 = X1 >= 3.5
+    B1 = X2 >= 10
+    B2 = X2 >= 9
+    A = A1 | A2
+    B = B1 | B2
+
+    !((X1 > 4) | (X1 > 3))
+
+    A & B
+    A1 & B
+    A & B1
+
+    A | A3
+
+    A ∨ B
+    A1 ∨ B
+    A ∨ B1
+
+    A \ B
+    A1 \ B
+    A \ B1
+
+    A1 ⊻ B1
+    A ⊻ B
+    A ⊻ B1
+    A1 ⊻ B
+
+    for t1 = [cc, co, oc, oo], t2 = [cc, co, oc, oo]
+        for i1 = 1:4, i2 = 1:4, i3 = 1:4, i4 = 1:4
+            t1(i1, i2) ∩ t2(i3, i4)
+            t1(i1, i2) ∪ t2(i3, i4)
+            t1(i1, i2) \ t2(i3, i4)
+            t1(i1, i2) ⊻ t2(i3, i4)
+        end
+    end
+
+    intersect([cc(1, 5), cc(3, 4)])
+    intersect(rect([cc(1, 5), cc(1, 5)]), rect([cc(2, 7), cc(2, 7)]))
 end
