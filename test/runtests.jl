@@ -124,4 +124,25 @@ using Distributions
 
     intersect([cc(1, 5), cc(3, 4)])
     intersect(rect([cc(1, 5), cc(1, 5)]), rect([cc(2, 7), cc(2, 7)]))
+
+    unionDisjoint(∅)
+    unionDisjoint(oo(-Inf, Inf))
+    unionDisjoint(oc(-Inf, 3))
+    unionDisjoint(oo(2, Inf))
+    unionDisjoint(cc(1, 2))
+    unionDisjoint(co(1, 2))
+    unionDisjoint(oc(1, 2))
+    unionDisjoint(oo(1, 2))
+
+
+    C1 = cuboid([cc(1, 2), cc(1, 2)])
+    C2 = cuboid([cc(1, 2), cc(2, 3)])
+    C3 = cuboid([cc(1, 2), cc(2.5, 4)])
+    RandomVariables.mergeOne([C1, C2])
+    RandomVariables.mergeOne([C1, C3])
+
+    diff(C1, C3)
+    C1 \ C1
+    xor(C1, C3)
+    not(C1)
 end
