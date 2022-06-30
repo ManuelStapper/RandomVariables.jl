@@ -64,6 +64,33 @@ function unionDisjoint(x::T1, y::T2)::Vector{Interval} where {T1, T2 <: Interval
     end
 end
 
+"""
+    increase(current::Vector{Int64}, n::Vector{Int64})
+
+Helper function to iterate over indices. `current` gives a vector of current indices
+and `n` is a vector of the same length with the maximum indices.
+Helps when looping over an arbitrary number of indices with potentially different
+maximum indices.
+"""
+function increase(current::Vector{Int64}, n::Vector{Int64})::Vector{Int64}
+    if current == n
+        error("Reached end")
+    end
+    if all(current .>= n)
+        error("Invalid current index")
+    end
+    # Increase last index and then check for index restrictions
+    current[end] += 1
+    while any(current .> n)
+        ind = findall(current .> n)
+        current[ind[end] - 1] += 1
+        if ind[end] <= length(current)
+            current[ind[end]:end] .= 1
+        end
+    end
+    return current
+end
+
 # Helper function
 function mergeCuboid(x::T1, y::T2)::Vector{Cuboid} where {T1, T2 <: Cuboid}
     if x.ndims != y.ndims
