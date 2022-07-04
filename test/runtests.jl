@@ -71,6 +71,11 @@ using Distributions
     C = rect([cc(1, 2), cc(1, 2)])
     D = rect([oo(1, 2), oo(1, 2)])
     union(C, D)
+    E(X1)
+    mean(X1)
+    var(X1)
+    skewness(X1)
+    kurtosis(X1)
 
     X1 >= 1
     X1 == 1
