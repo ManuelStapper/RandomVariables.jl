@@ -8,6 +8,7 @@ import Base.<, Base.>, Base.<=, Base.>=, Base.==, Base.!=, Base.in
 import Base.!, Base.|, Base.&, Base.⊻
 import Base.+, Base.-, Base.*, Base./, Base.inv, Base.exp, Base.log, Base.sqrt
 import Base.abs, Base.^, Base.adjoint
+import Distributions.mean, Distributions.var
 
 include("interval.jl")
 include("subset.jl")
@@ -21,11 +22,13 @@ include("setAlgebra2.jl")
 include("probability.jl")
 include("operators.jl")
 include("transformation.jl")
+include("moments.jl")
 
 export not, diff, \, xor, event, eventConditional, intersect, Interval
 export emptyset, ∅, cc, oo, co, oc, length, iterate, copy, Cuboid
 export cuboid, rect, ndims, <, <= , >, >=, ==, !=, in, !, &, |, ∨, ⊻
 export P, RandomVariable, RV, RVtransformed, unionDisjoint, reduce
 export union, issubset, +, -, *, /, inv, exp, log, sqrt, abs, adjoint, ^
+export mean, var, E, skewness, kurtosis
 
 end
