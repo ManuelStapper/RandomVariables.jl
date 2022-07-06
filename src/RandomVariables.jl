@@ -8,7 +8,7 @@ import Base.<, Base.>, Base.<=, Base.>=, Base.==, Base.!=, Base.in
 import Base.!, Base.|, Base.&, Base.⊻
 import Base.+, Base.-, Base.*, Base./, Base.inv, Base.exp, Base.log, Base.sqrt
 import Base.abs, Base.^, Base.adjoint
-import Distributions.mean, Distributions.var, Distributions.skewness, Distribution.kurtosis
+import Distributions.mean, Distributions.var, Distributions.skewness, Distributions.kurtosis
 
 include("interval.jl")
 include("subset.jl")
