@@ -1,4 +1,4 @@
-boxes"""
+"""
     diff(x::Interval, y::Interval)
     diff(x::Box, y::Box, merge::Bool)
     diff(x::Vector{Box}, y::Vector{Box}, merge::Bool)
