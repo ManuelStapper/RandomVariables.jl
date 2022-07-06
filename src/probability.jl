@@ -83,10 +83,10 @@ A = B|C, it is computed as P(B ∩ C)/P(C).
 """
 function P(A::event)
     out = 0.0
-    for i = 1:length(A.cuboids)
+    for i = 1:length(A.boxes)
         temp = 1.0
-        for j = 1:length(A.cuboids[i].lims)
-            temp *= P(A.X[j], A.cuboids[i].lims[j])
+        for j = 1:length(A.boxes[i].lims)
+            temp *= P(A.X[j], A.boxes[i].lims[j])
         end
         out += temp
     end

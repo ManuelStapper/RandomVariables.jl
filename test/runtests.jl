@@ -1,4 +1,4 @@
-using RandomVariables
+boxusing RandomVariables
 using Test
 using Distributions
 
@@ -140,9 +140,9 @@ using Distributions
     unionDisjoint(oo(1, 2))
 
 
-    C1 = cuboid([cc(1, 2), cc(1, 2)])
-    C2 = cuboid([cc(1, 2), cc(2, 3)])
-    C3 = cuboid([cc(1, 2), cc(2.5, 4)])
+    C1 = box([cc(1, 2), cc(1, 2)])
+    C2 = box([cc(1, 2), cc(2, 3)])
+    C3 = box([cc(1, 2), cc(2.5, 4)])
     RandomVariables.mergeOne([C1, C2])
     RandomVariables.mergeOne([C1, C3])
 

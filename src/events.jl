@@ -4,43 +4,43 @@
 #           be different from the length of "X"
 
 """
-    event(X::Vector{RandomVariable}, cuboids::Vector{Cuboid})
+    event(X::Vector{RandomVariable}, boxes::Vector{Box})
 
 An event characterized by a vector of distinct random variables `X` and a vector
-of cuboids. The dimension of each cuboid must match the number of elements in `X`.
-The cuboids must be disjoint.
+of boxes. The dimension of each box must match the number of elements in `X`.
+The boxes must be disjoint.
 
-See also: [`Cuboid`](@ref), [`cuboid`](@ref), [`RandomVariable`](@ref), [`RV`](@ref),
+See also: [`Box`](@ref), [`box`](@ref), [`RandomVariable`](@ref), [`RV`](@ref),
 [`RVtransformed`](@ref)
 """
 struct event
     X::Vector{RandomVariable}
-    cuboids::Vector{Cuboid}
-    function event(X::Vector{T1}, cuboids::Vector{T2}) where {T1 <: RandomVariable, T2 <: Cuboid}
-        for i = 1:length(cuboids)
-            if cuboids[i].ndims != length(X)
+    boxes::Vector{Box}
+    function event(X::Vector{T1}, boxes::Vector{T2}) where {T1 <: RandomVariable, T2 <: Box}
+        for i = 1:length(boxes)
+            if boxes[i].ndims != length(X)
                 error("Invalid dimensions")
             end
         end
-        return new(X, cuboids)
+        return new(X, boxes)
     end
 end
 
 # This function should not exist
-# function event(X::T1, cuboids::T2){T1 <: RandomVariable, T2 <: Cuboid}
-#     return event([X], [cuboids])
+# function event(X::T1, boxes::T2){T1 <: RandomVariable, T2 <: Box}
+#     return event([X], [boxes])
 # end
 
 function event(X::T1, intervals::Vector{T2}) where {T1 <: RandomVariable, T2 <: Interval}
-    cuboids = Vector{Cuboid}(undef, length(intervals))
+    boxes = Vector{Box}(undef, length(intervals))
     for i = 1:length(intervals)
-        cuboids[i] = cuboid([intervals[i]])
+        boxes[i] = box([intervals[i]])
     end
-    return event([X], cuboids)
+    return event([X], boxes)
 end
 
 function event(X::RandomVariable, interval::Interval)
-    return event([X], [cuboid(interval)])
+    return event([X], [box(interval)])
 end
 
 # eventConditional is a combination of two events, one for which the probability
@@ -71,15 +71,15 @@ struct eventConditional
 
             if of.X[sortperm(id1)] == given.X[sortperm(id2)]
                 X = of.X[sortperm(id2)]
-                cuboids1 = copy(of.cuboids)
-                for i = 1:length(cuboids1)
-                    cuboids1[i] = cuboid(cuboids1[i].lims[sortperm(id1)])
+                boxes1 = copy(of.boxes)
+                for i = 1:length(boxes1)
+                    boxes1[i] = box(boxes1[i].lims[sortperm(id1)])
                 end
-                cuboids2 = copy(given.cuboids)
-                for i = 1:length(cuboids2)
-                    cuboids2[i] = cuboid(cuboids2[i].lims[sortperm(id2)])
+                boxes2 = copy(given.boxes)
+                for i = 1:length(boxes2)
+                    boxes2[i] = box(boxes2[i].lims[sortperm(id2)])
                 end
-                return new(event(X, cuboids1), event(X, cuboids2))
+                return new(event(X, boxes1), event(X, boxes2))
             end
         end
 
@@ -88,9 +88,9 @@ struct eventConditional
         id = sort(unique([id1; id2]))
         nRV = length(id)
 
-        cuboidsOf = Vector{Cuboid}(undef, length(of.cuboids))
+        boxesOf = Vector{Box}(undef, length(of.boxes))
         Xout = Vector{RandomVariable}(undef, nRV)
-        cuboidsGiven = Vector{Cuboid}(undef, length(given.cuboids))
+        boxesGiven = Vector{Box}(undef, length(given.boxes))
 
         for i = 1:nRV
             if id[i] in id1
@@ -100,29 +100,29 @@ struct eventConditional
             end
         end
 
-        for i = 1:length(cuboidsOf)
-            temp = cuboid(Vector{Interval}(undef, nRV))
+        for i = 1:length(boxesOf)
+            temp = box(Vector{Interval}(undef, nRV))
             for j = 1:length(id)
                 if id[j] in id1
-                    temp.lims[j] = of.cuboids[i].lims[findall(id1 .== id[j])[1]]
+                    temp.lims[j] = of.boxes[i].lims[findall(id1 .== id[j])[1]]
                 else
                     temp.lims[j] = oo(-Inf, Inf)
                 end
             end
-            cuboidsOf[i] = copy(temp)
+            boxesOf[i] = copy(temp)
         end
 
-        for i = 1:length(cuboidsGiven)
-            temp = cuboid(Vector{Interval}(undef, nRV))
+        for i = 1:length(boxesGiven)
+            temp = box(Vector{Interval}(undef, nRV))
             for j = 1:length(id)
                 if id[j] in id2
-                    temp.lims[j] = given.cuboids[i].lims[findall(id2 .== id[j])[1]]
+                    temp.lims[j] = given.boxes[i].lims[findall(id2 .== id[j])[1]]
                 else
                     temp.lims[j] = oo(-Inf, Inf)
                 end
             end
-            cuboidsGiven[i] = copy(temp)
+            boxesGiven[i] = copy(temp)
         end
-        return new(event(Xout, cuboidsOf), event(Xout, cuboidsGiven))
+        return new(event(Xout, boxesOf), event(Xout, boxesGiven))
     end
 end

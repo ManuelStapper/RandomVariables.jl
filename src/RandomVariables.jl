@@ -25,8 +25,8 @@ include("transformation.jl")
 include("moments.jl")
 
 export not, diff, \, xor, event, eventConditional, intersect, Interval
-export emptyset, ∅, cc, oo, co, oc, length, iterate, copy, Cuboid
-export cuboid, rect, ndims, <, <= , >, >=, ==, !=, in, !, &, |, ∨, ⊻
+export emptyset, ∅, cc, oo, co, oc, length, iterate, copy, Box
+export box, rect, ndims, <, <= , >, >=, ==, !=, in, !, &, |, ∨, ⊻
 export P, RandomVariable, RV, RVtransformed, unionDisjoint, reduce
 export union, issubset, +, -, *, /, inv, exp, log, sqrt, abs, adjoint, ^
 export mean, var, E, skewness, kurtosis

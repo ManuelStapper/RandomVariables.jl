@@ -252,17 +252,17 @@ function intersect(x::Vector{T})::Interval where {T <: Interval}
     return out
 end
 
-# Intersection of two cuboids, x and y
+# Intersection of two boxes, x and y
 """
-    intersect(x::Cuboid, y::Cuboid)
+    intersect(x::Box, y::Box)
     x ∩ y
 
-Intersection of two cuboids. The dimensions of `x` and `y` must match. A single cuboid
+Intersection of two boxes. The dimensions of `x` and `y` must match. A single box
 is returned.
 
-See also: [`Cuboid`](@ref)
+See also: [`Box`](@ref)
 """
-function intersect(x::T1, y::T2)::Cuboid where {T1, T2 <: Cuboid}
+function intersect(x::T1, y::T2)::Box where {T1, T2 <: Box}
     if x.ndims != y.ndims
         error("Invalid dimensions")
     end
@@ -273,11 +273,11 @@ function intersect(x::T1, y::T2)::Cuboid where {T1, T2 <: Cuboid}
     for i = 1:nRV
         ints[i] = intersect(x.lims[i], y.lims[i])
         if ints[i] == emptyset()
-            return cuboid(fill(emptyset(), nRV))
+            return box(fill(emptyset(), nRV))
         end
     end
 
-    return cuboid(ints)
+    return box(ints)
 end
 
 function intersect(x::rect, y::rect)::rect

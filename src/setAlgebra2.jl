@@ -1,5 +1,5 @@
-# Goal: Function to create union of two interval sets (cuboids) such that
-# the output is a vector of disjoint cuboids
+# Goal: Function to create union of two interval sets (boxes) such that
+# the output is a vector of disjoint boxes
 # Some prep functions needed
 
 # Given an interval, give out disjoint intervals whose union gives the real line
@@ -92,7 +92,7 @@ function increase(current::Vector{Int64}, n::Vector{Int64})::Vector{Int64}
 end
 
 # Helper function
-function mergeCuboid(x::T1, y::T2)::Vector{Cuboid} where {T1, T2 <: Cuboid}
+function mergeBox(x::T1, y::T2)::Vector{Box} where {T1, T2 <: Box}
     if x.ndims != y.ndims
         error("Invalid dimensions")
     end
@@ -118,27 +118,27 @@ function mergeCuboid(x::T1, y::T2)::Vector{Cuboid} where {T1, T2 <: Cuboid}
         end
     end
 
-    # Two cuboids can only be merged if they have the same single intervals
+    # Two boxes can only be merged if they have the same single intervals
     # in all dimensions except for one, where they must be "mergable"
     if (sum(flag .!= 1) == 1) & (sum(flag .== 2) == 1)
         out = copy(x.lims)
         ind = findall(flag .== 2)[1]
         out[ind] = union(x.lims[ind], y.lims[ind])[1]
-        return [cuboid(out, x.ndims)]
+        return [box(out, x.ndims)]
     end
 
     return [x, y]
 end
 
 # another helper function
-function mergeOne(x::Vector{T1}) where {T1 <: Cuboid}
+function mergeOne(x::Vector{T1}) where {T1 <: Box}
     if length(x) == 1
         return x
     end
 
     for i = 1:length(x) - 1
         for j = i+1:length(x)
-            temp = mergeCuboid(x[i], x[j])
+            temp = mergeBox(x[i], x[j])
             if length(temp) == 1
                 return [x[setdiff(1:length(x), [i, j])]; temp[1]]
             end
@@ -150,22 +150,22 @@ end
 
 # Function to remove empty sets and intervals that contain other intervals
 # Only important for the unionDisjoint
-# If merge = true, then the resulting cuboids are checked whether they can be
-# unioned to one cuboid
+# If merge = true, then the resulting boxes are checked whether they can be
+# unioned to one box
 """
-    reduce(x::Vector{Cuboid}, merge::Bool)
+    reduce(x::Vector{Box}, merge::Bool)
 
-A function that takes a vector of [`Cuboid`][@ref]s and removes
-- Empty cuboids (where at least one boundry is the empty set)
+A function that takes a vector of [`Box`][@ref]s and removes
+- Empty boxes (where at least one boundry is the empty set)
 - Doubles
-- Cuboids that contain an other cuboid
+- Boxes that contain an other box
 
-If `merge` is true, the reduced vector of cuboids is checked for pairs of cuboids
+If `merge` is true, the reduced vector of boxes is checked for pairs of boxes
 that can be merged to one.
 
-See also: [`union(x::Cuboid, y::Cuboid)`](@ref)
+See also: [`union(x::Box, y::Box)`](@ref)
 """
-function reduce(x::Vector{T1}, merge::Bool = false)::Vector{Cuboid} where {T1 <: Cuboid}
+function reduce(x::Vector{T1}, merge::Bool = false)::Vector{Box} where {T1 <: Box}
     out = copy(x)
     # Step 1: Remove empty sets
     keep = fill(true, length(out))
@@ -179,7 +179,7 @@ function reduce(x::Vector{T1}, merge::Bool = false)::Vector{Cuboid} where {T1 <:
     # Step 2: Remove doubles
     out = unique(out)
 
-    # Step3: Remove cuboids that contain other cuboids
+    # Step3: Remove boxes that contain other boxes
     keep = fill(true, length(out))
     for i = 1:length(out)-1
         for j = i+1:length(out)
@@ -205,7 +205,7 @@ function reduce(x::Vector{T1}, merge::Bool = false)::Vector{Cuboid} where {T1 <:
         for i = 1:length(out) - 1
             for j = i+1:length(out)
                 if !oneChanged
-                    temp = mergeCuboid(out[i], out[j])
+                    temp = mergeBox(out[i], out[j])
                     if length(temp) == 1
                         out = [out[setdiff(1:length(out), [i, j])]; temp]
                         oneChanged = true
@@ -219,15 +219,15 @@ function reduce(x::Vector{T1}, merge::Bool = false)::Vector{Cuboid} where {T1 <:
     end
 end
 
-# Function for the same partitioning as above for two cuboids
+# Function for the same partitioning as above for two boxes
 """
-    union(x::Cuboid, y::Cuboid, merge::Bool)::Vector{Cuboid}
+    union(x::Box, y::Box, merge::Bool)::Vector{Box}
 
-Function to union two cuboids of arbitrary dimensions. It returns a vector of
-disjoint cuboids such that their union is the union of `x`and `y`.
-If `merge` is true, the disjoint cuboids are checked if they can be merged.
+Function to union two boxes of arbitrary dimensions. It returns a vector of
+disjoint boxes such that their union is the union of `x`and `y`.
+If `merge` is true, the disjoint boxes are checked if they can be merged.
 """
-function union(x::T1, y::T2, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
+function union(x::T1, y::T2, merge::Bool = true)::Vector{Box} where {T1, T2 <: Box}
     if x.ndims != y.ndims
         error("Invalid dimensions")
     end
@@ -241,9 +241,9 @@ function union(x::T1, y::T2, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <
         allInts[i] = unionDisjoint(x.lims[i], y.lims[i])
     end
     nInts = length.(allInts)
-    out = Vector{Cuboid}(undef, prod(nInts))
+    out = Vector{Box}(undef, prod(nInts))
 
-    # Take one interval of each dimensions partition and build a cuboid from them
+    # Take one interval of each dimensions partition and build a box from them
     ind = ones(Int64, nRV)
     ind[end] = 0
     for counter = 1:prod(nInts)
@@ -252,10 +252,10 @@ function union(x::T1, y::T2, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <
         for j = 1:nRV
             temp[j] = allInts[j][ind[j]]
         end
-        out[counter] = cuboid(temp)
+        out[counter] = box(temp)
     end
 
-    # Then check which cuboids are inside either x or y
+    # Then check which boxes are inside either x or y
     keep = fill(true, length(out))
     for i = 1:length(out)
         if any(out[i].lims .== [emptyset()])
@@ -271,11 +271,11 @@ function union(x::T1, y::T2, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <
 end
 
 # Idea:
-# Provide a list of cuboids, if there is an overlap, use unionDisjoint
-# to create non-overlapping cuboids and directly return it
+# Provide a list of boxes, if there is an overlap, use unionDisjoint
+# to create non-overlapping boxes and directly return it
 # Repeat steps until there is no overlap anymore
 # Helper function
-function resolveOverlap(x::Vector{T1})::Vector{Cuboid} where {T1 <: Cuboid}
+function resolveOverlap(x::Vector{T1})::Vector{Box} where {T1 <: Box}
     n = length(x)
     if length(unique((z -> z.ndims).(x))) != 1
         error("Invalid dimensions")
@@ -283,7 +283,7 @@ function resolveOverlap(x::Vector{T1})::Vector{Cuboid} where {T1 <: Cuboid}
     if n == 1
         return x
     end
-    add = Vector{Cuboid}(undef, 0)
+    add = Vector{Box}(undef, 0)
     remove = fill(false, n)
     for i = 1:n-1
         for j = i+1:n
@@ -302,17 +302,17 @@ function resolveOverlap(x::Vector{T1})::Vector{Cuboid} where {T1 <: Cuboid}
 end
 
 """
-    union(x::Vector{Cuboid}, y::Vector{Cuboid}, merge::Bool)::Vector{Cuboid}
-    union(x::Vector{Cuboid}, y::Cuboid, merge::Bool)::Vector{Cuboid}
-    union(x::Cuboid, y::Vector{Cuboid}, merge::Bool)::Vector{Cuboid}
+    union(x::Vector{Box}, y::Vector{Box}, merge::Bool)::Vector{Box}
+    union(x::Vector{Box}, y::Box, merge::Bool)::Vector{Box}
+    union(x::Box, y::Vector{Box}, merge::Bool)::Vector{Box}
 
-For two collections of disjoint cuboids `x` and `y`, gives a vector of
-disjoint cuboids, such that their union equals the union of `x`and `y`.
+For two collections of disjoint boxes `x` and `y`, gives a vector of
+disjoint boxes, such that their union equals the union of `x`and `y`.
 
 If `merge` is `true`, the elements of the resulting vector are checked if they
 can be merged.
 """
-function union(x::Vector{T1}, y::Vector{T2}, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
+function union(x::Vector{T1}, y::Vector{T2}, merge::Bool = true)::Vector{Box} where {T1, T2 <: Box}
     out = [x; y]
     while true
         nOld = length(out)
@@ -324,32 +324,32 @@ function union(x::Vector{T1}, y::Vector{T2}, merge::Bool = true)::Vector{Cuboid}
     return reduce(out, merge)
 end
 
-function union(x::Vector{T1}, y::T2, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
+function union(x::Vector{T1}, y::T2, merge::Bool = true)::Vector{Box} where {T1, T2 <: Box}
     return union(x, [y], merge)
 end
-function union(x::T1, y::Vector{T2}, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
+function union(x::T1, y::Vector{T2}, merge::Bool = true)::Vector{Box} where {T1, T2 <: Box}
     return union([x], y, merge)
 end
 
 """
-    intersect(x::Vector{Cuboid}, y::Vector{Cuboid})::Vector{Cuboid}
-    intersect(x::Vector{Cuboid}, y::Cuboid)::Vector{Cuboid}
-    intersect(x::Cuboid, y::Vector{Cuboid})::Vector{Cuboid}
+    intersect(x::Vector{Box}, y::Vector{Box})::Vector{Box}
+    intersect(x::Vector{Box}, y::Box)::Vector{Box}
+    intersect(x::Box, y::Vector{Box})::Vector{Box}
 
-For two collections of disjoint cuboids `x` and `y`, gives a vector of
-disjoint cuboids, such that their union equals the union of `x`and `y`.
+For two collections of disjoint boxes `x` and `y`, gives a vector of
+disjoint boxes, such that their union equals the union of `x`and `y`.
 
 If `merge` is `true`, the elements of the resulting vector are checked if they
 can be merged.
 """
-function intersect(x::Vector{T1}, y::Vector{T2})::Vector{Cuboid} where {T1, T2 <: Cuboid}
+function intersect(x::Vector{T1}, y::Vector{T2})::Vector{Box} where {T1, T2 <: Box}
     if length(unique([(z -> z.ndims).(x); (z -> z.ndims).(y)])) != 1
         error("Invalid dimensions")
     end
 
     # Number of random variables
     nRV = x[1].ndims
-    ints = Vector{Cuboid}(undef, length(x)*length(y))
+    ints = Vector{Box}(undef, length(x)*length(y))
     counter = 1
     for i = 1:length(x), j = 1:length(y)
         ints[counter] = intersect(x[i], y[j])
@@ -359,15 +359,15 @@ function intersect(x::Vector{T1}, y::Vector{T2})::Vector{Cuboid} where {T1, T2 <
     return reduce(ints, false)
 end
 
-function intersect(x::T1, y::Vector{T2})::Vector{Cuboid} where {T1, T2 <: Cuboid}
+function intersect(x::T1, y::Vector{T2})::Vector{Box} where {T1, T2 <: Box}
     return intersect([x], y)
 end
-function intersect(x::Vector{T1}, y::T2)::Vector{Cuboid} where {T1, T2 <: Cuboid}
+function intersect(x::Vector{T1}, y::T2)::Vector{Box} where {T1, T2 <: Box}
     return intersect(x, [y])
 end
 
 
-function diff(x::T1, y::T2, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
+function diff(x::T1, y::T2, merge::Bool = true)::Vector{Box} where {T1, T2 <: Box}
     temp = union(x, y, false)
     keep = fill(false, length(temp))
     for i = 1:length(temp)
@@ -378,11 +378,11 @@ function diff(x::T1, y::T2, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <:
     if any(keep)
         return reduce(temp[keep], merge)
     else
-        return [cuboid(fill(emptyset(), x.ndims))]
+        return [box(fill(emptyset(), x.ndims))]
     end
 end
 
-function diff(x::Vector{T1}, y::Vector{T2}, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
+function diff(x::Vector{T1}, y::Vector{T2}, merge::Bool = true)::Vector{Box} where {T1, T2 <: Box}
     temp = union(x, y, false)
     keep = fill(false, length(temp))
     for i = 1:length(temp)
@@ -393,32 +393,32 @@ function diff(x::Vector{T1}, y::Vector{T2}, merge::Bool = true)::Vector{Cuboid} 
     if any(keep)
         return reduce(temp[keep], merge)
     else
-        return [cuboid(fill(emptyset(), x[1].ndims))]
+        return [box(fill(emptyset(), x[1].ndims))]
     end
 end
 
-function diff(x::T1, y::Vector{T2}, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
+function diff(x::T1, y::Vector{T2}, merge::Bool = true)::Vector{Box} where {T1, T2 <: Box}
     return diff([x], y, merge)
 end
 
-function diff(x::Vector{T1}, y::T2, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
+function diff(x::Vector{T1}, y::T2, merge::Bool = true)::Vector{Box} where {T1, T2 <: Box}
     return diff(x, [y], merge)
 end
 
-(\)(x::T1, y::T2) where {T1, T2 <: Cuboid} = begin
+(\)(x::T1, y::T2) where {T1, T2 <: Box} = begin
     diff(x, y)
 end
-(\)(x::Vector{T1}, y::T2) where {T1, T2 <: Cuboid} = begin
+(\)(x::Vector{T1}, y::T2) where {T1, T2 <: Box} = begin
     diff(x, y)
 end
-(\)(x::T1, y::Vector{T2}) where {T1, T2 <: Cuboid} = begin
+(\)(x::T1, y::Vector{T2}) where {T1, T2 <: Box} = begin
     diff(x, y)
 end
-(\)(x::Vector{T1}, y::Vector{T2}) where {T1, T2 <: Cuboid} = begin
+(\)(x::Vector{T1}, y::Vector{T2}) where {T1, T2 <: Box} = begin
     diff(x, y)
 end
 
-function xor(x::T1, y::T2, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
+function xor(x::T1, y::T2, merge::Bool = true)::Vector{Box} where {T1, T2 <: Box}
     out = union(x, y, false)
     keep = fill(false, length(out))
 
@@ -433,11 +433,11 @@ function xor(x::T1, y::T2, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: 
     if any(keep)
         return reduce(out[keep], merge)
     else
-        return [cuboid(fill(emptyset(), x.ndims))]
+        return [box(fill(emptyset(), x.ndims))]
     end
 end
 
-function xor(x::Vector{T1}, y::Vector{T2}, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
+function xor(x::Vector{T1}, y::Vector{T2}, merge::Bool = true)::Vector{Box} where {T1, T2 <: Box}
     out = union(x, y, false)
     keep = fill(false, length(out))
 
@@ -452,29 +452,29 @@ function xor(x::Vector{T1}, y::Vector{T2}, merge::Bool = true)::Vector{Cuboid} w
     if any(keep)
         return reduce(out[keep], merge)
     else
-        return [cuboid(fill(emptyset(), x.ndims))]
+        return [box(fill(emptyset(), x.ndims))]
     end
 end
 
-function xor(x::Vector{T1}, y::T2, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
+function xor(x::Vector{T1}, y::T2, merge::Bool = true)::Vector{Box} where {T1, T2 <: Box}
     return xor(x, [y], merge)
 end
 
-function xor(x::T1, y::Vector{T2}, merge::Bool = true)::Vector{Cuboid} where {T1, T2 <: Cuboid}
+function xor(x::T1, y::Vector{T2}, merge::Bool = true)::Vector{Box} where {T1, T2 <: Box}
     return xor([x], y, merge)
 end
 
 """
-    not(x::Cuboid, merge::Bool)::Vector{Cuboid}
-    not(x::Vector{Cuboid}, merge::Bool)::Vector{Cuboid}
+    not(x::Box, merge::Bool)::Vector{Box}
+    not(x::Vector{Box}, merge::Bool)::Vector{Box}
 
-Computes the complement of a cuboid or the complement of a union of cuboids.
+Computes the complement of a box or the complement of a union of boxes.
 If `merge` is `true`, the elements of the resulting vector are checked if they
 can be merged.
 """
-function not(x::T1, merge::Bool = true)::Vector{Cuboid} where {T1 <: Cuboid}
+function not(x::T1, merge::Bool = true)::Vector{Box} where {T1 <: Box}
     n = x.ndims
-    y = cuboid(fill(oo(-Inf, Inf), n))
+    y = box(fill(oo(-Inf, Inf), n))
     out = union(x, y, false)
     keep = fill(true, length(out))
     for i = 1:length(out)
@@ -485,16 +485,16 @@ function not(x::T1, merge::Bool = true)::Vector{Cuboid} where {T1 <: Cuboid}
     if any(keep)
         return reduce(out[keep], merge)
     else
-        return return [cuboid(fill(emptyset(), n))]
+        return return [box(fill(emptyset(), n))]
     end
 end
 
-function not(x::Vector{T1}, merge::Bool = true)::Vector{Cuboid} where {T1 <: Cuboid}
+function not(x::Vector{T1}, merge::Bool = true)::Vector{Box} where {T1 <: Box}
     if length(unique((z -> z.ndims).(x))) != 1
         error("Invalid dimensions")
     end
     n = x[1].ndims
-    y = cuboid(fill(oo(-Inf, Inf), n))
+    y = box(fill(oo(-Inf, Inf), n))
     out = union(x, y, false)
     keep = fill(true, length(out))
     for i = 1:length(out)
@@ -507,21 +507,21 @@ function not(x::Vector{T1}, merge::Bool = true)::Vector{Cuboid} where {T1 <: Cub
     if any(keep)
         return reduce(out[keep], merge)
     else
-        return return [cuboid(fill(emptyset(), n))]
+        return return [box(fill(emptyset(), n))]
     end
 end
 
 # Now above functions can be applied to events
 # Step 1: Extend the vectors of random variables to be equal
-#         (Use ordering for cuboids, fill in with sure event (-Inf, Inf))
-# Step 2: Apply above function to the cuboids
+#         (Use ordering for boxes, fill in with sure event (-Inf, Inf))
+# Step 2: Apply above function to the boxes
 
 function unifyEvents(A::event, B::event)::Tuple{event, event}
     X1 = copy(A.X)
     X2 = copy(B.X)
 
-    cuboids1 = copy(A.cuboids)
-    cuboids2 = copy(B.cuboids)
+    boxes1 = copy(A.boxes)
+    boxes2 = copy(B.boxes)
 
     id1 = (xx-> xx.id).(A.X)
     id2 = (xx-> xx.id).(B.X)
@@ -532,8 +532,8 @@ function unifyEvents(A::event, B::event)::Tuple{event, event}
             id1 = [id1; id2[i]]
             X1 = [X1; X2[i]]
 
-            for j = 1:length(cuboids1)
-                cuboids1[j] = cuboid([cuboids1[j].lims; oo(-Inf, Inf)], cuboids1[j].ndims + 1)
+            for j = 1:length(boxes1)
+                boxes1[j] = box([boxes1[j].lims; oo(-Inf, Inf)], boxes1[j].ndims + 1)
             end
         end
     end
@@ -543,8 +543,8 @@ function unifyEvents(A::event, B::event)::Tuple{event, event}
             id2 = [id2; id1[i]]
             X2 = [X2; X1[i]]
 
-            for j = 1:length(cuboids2)
-                cuboids2[j] = cuboid([cuboids2[j].lims; oo(-Inf, Inf)], cuboids2[j].ndims + 1)
+            for j = 1:length(boxes2)
+                boxes2[j] = box([boxes2[j].lims; oo(-Inf, Inf)], boxes2[j].ndims + 1)
             end
         end
     end
@@ -554,17 +554,17 @@ function unifyEvents(A::event, B::event)::Tuple{event, event}
     id1 = id1[o]
     X1 = X1[o]
 
-    for i = 1:length(cuboids1)
-        cuboids1[i] = cuboid(cuboids1[i].lims[o])
+    for i = 1:length(boxes1)
+        boxes1[i] = box(boxes1[i].lims[o])
     end
 
     o = sortperm(id2)
     id2 = id2[o]
     X2 = X2[o]
-    for i = 1:length(cuboids2)
-        cuboids2[i] = cuboid(cuboids2[i].lims[o])
+    for i = 1:length(boxes2)
+        boxes2[i] = box(boxes2[i].lims[o])
     end
-    return event(X1, cuboids1), event(X2, cuboids2)
+    return event(X1, boxes1), event(X2, boxes2)
 end
 
 # Union of two events, potentially involving different random variables
@@ -573,11 +573,11 @@ end
     A ∪ B
 
 Union of two events `A` and `B`. Returns the event that `A` occurs or `B` or both.
-If `merge` is true, the vector of cuboids in the resulting event are unioned if possible.
+If `merge` is true, the vector of boxes in the resulting event are unioned if possible.
 """
 function union(A::event, B::event, merge::Bool = true)::event
     A1, B1 = unifyEvents(A, B)
-    return event(A1.X, union(A1.cuboids, B1.cuboids, merge))
+    return event(A1.X, union(A1.boxes, B1.boxes, merge))
 end
 
 # Same for intersections
@@ -589,7 +589,7 @@ Intersection of two events `A` and `B`. Returns the event that events `A` and `B
 """
 function intersect(A::event, B::event)::event
     A1, B1 = unifyEvents(A, B)
-    return event(A1.X, intersect(A1.cuboids, B1.cuboids))
+    return event(A1.X, intersect(A1.boxes, B1.boxes))
 end
 
 """
@@ -598,7 +598,7 @@ end
 The complementary event of an event `A`.
 """
 function not(A::event)::event
-    return event(A.X, not(A.cuboids))
+    return event(A.X, not(A.boxes))
 end
 
 """
@@ -610,7 +610,7 @@ Takes two events `A` and `B` and returns the event that `A` occurs while
 """
 function diff(A::event, B::event)::event
     A1, B1 = unifyEvents(A, B)
-    return event(A1.X, diff(A1.cuboids, B1.cuboids))
+    return event(A1.X, diff(A1.boxes, B1.boxes))
 end
 
 (\)(A::event, B::event)::event = begin
@@ -625,5 +625,5 @@ and `B` does not or that `B` occurs and `A` does not.
 """
 function xor(A::event, B::event)
     A1, B1 = unifyEvents(A, B)
-    return event(A1.X, xor(A1.cuboids, B1.cuboids))
+    return event(A1.X, xor(A1.boxes, B1.boxes))
 end

@@ -9,7 +9,7 @@
     y ⊇ x
 
 Function to check if `x` is a subset of `y`. The inputs can either both be of
-type [`Interval`](@ref) or of type [`Cuboid`](@ref). It can also be used as
+type [`Interval`](@ref) or of type [`Box`](@ref). It can also be used as
 operators `⊆` and `⊇`.
 """
 function issubset(x::T, y::T)::Bool where {T <: Interval}
@@ -117,8 +117,8 @@ function issubset(x::oc, y::co)::Bool
     return false
 end
 
-# For cuboids
-function issubset(x::T1, y::T2)::Bool where {T1, T2 <: Cuboid}
+# For boxes
+function issubset(x::T1, y::T2)::Bool where {T1, T2 <: Box}
     if x.ndims != y.ndims
         return false
     end
@@ -130,7 +130,7 @@ function issubset(x::T1, y::T2)::Bool where {T1, T2 <: Cuboid}
     return true
 end
 
-function issubset(x::T1, y::Vector{T2})::Bool where {T1, T2 <: Cuboid}
+function issubset(x::T1, y::Vector{T2})::Bool where {T1, T2 <: Box}
     if !all(x.ndims .== (z -> z.ndims).(y))
         return false
     end

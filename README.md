@@ -66,7 +66,7 @@ C = X ≤ 0
 * !(A) : (-∞, 1]
 
 Events can include multiple independent random variables. For n variables, the
-bounding intervals will then be n dimensional rectangles (cuboids). For example
+bounding intervals will then be n dimensional rectangles (boxes). For example
 ``(X < 1) & (X ≥ 0) & (Y ≤ 1) & (Y > 0)`` creates an event with random variables
 X and Y with bounding rectangle [0, 1) × (0, 1].
 

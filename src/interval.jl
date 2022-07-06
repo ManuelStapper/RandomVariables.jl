@@ -156,42 +156,42 @@ function copy(x::T) where {T <: Interval}
 end
 
 """
-    Cuboid::DataType
+    Box::DataType
 
-Abstract supertype for [`cuboid`}(@ref) and [`rect`](@ref).
+Abstract supertype for [`box`}(@ref) and [`rect`](@ref).
 """
-abstract type Cuboid end
+abstract type Box end
 
 """
-    cuboid(lims::Vector{Interval}, ndims::Int64) <: Cuboid
-    cuboid(lims::Vector{Interval}) <: Cuboid
+    box(lims::Vector{Interval}, ndims::Int64) <: Box
+    box(lims::Vector{Interval}) <: Box
 
-A cuboid, subset of the `ndims`-dimensional real numbers. `lims` is a vector of
+A box, subset of the `ndims`-dimensional real numbers. `lims` is a vector of
 length `ndims` that contains the boundries in the dimensions, each being an
 [`Interval`](@ref). To initialize it, only the boundries can be provided.
 """
-struct cuboid <: Cuboid
+struct box <: Box
     lims::Vector{Interval}
-    function cuboid(lims::Vector{T}, ndims = 0) where {T <: Interval}
+    function box(lims::Vector{T}, ndims = 0) where {T <: Interval}
         return new(lims, ifelse(ndims == 0, length(lims), ndims))
     end
     ndims::Int64
 end
 
-function cuboid(x::Interval)
-    cuboid([x], 1)
+function box(x::Interval)
+    box([x], 1)
 end
 
 
 """
-    rect(lims::Vector{Interval}, ndims::Int64) <: Cuboid
-    rect(lims::Vector{Interval}) <: Cuboid
+    rect(lims::Vector{Interval}, ndims::Int64) <: Box
+    rect(lims::Vector{Interval}) <: Box
 
 A two dimensional rectange. `lims` is a vector of
 length two that contains the boundries in the dimensions, each being an
 [`Interval`](@ref). To initialize it, only the boundries can be provided.
 """
-struct rect <: Cuboid
+struct rect <: Box
     lims::Vector{Interval}
     ndims::Int64
     function rect(lims::Vector{T}, ndims::Int64 = 2) where {T <: Interval}
@@ -202,26 +202,26 @@ struct rect <: Cuboid
     end
 end
 
-function length(x::T) where {T <: Cuboid}
+function length(x::T) where {T <: Box}
     return 1
 end
 
-function iterate(x::T) where {T <: Cuboid}
+function iterate(x::T) where {T <: Box}
     (1.00, nothing)
 end
-function iterate(x::T, nothing) where {T <: Cuboid}
+function iterate(x::T, nothing) where {T <: Box}
 
 end
 
 """
-    ndims(x <: Cuboid)::Int64
+    ndims(x <: Box)::Int64
 
-Function to obtains the number of dimensions of a [`Cuboid`](@ref).
+Function to obtains the number of dimensions of a [`Box`](@ref).
 """
-function ndims(x::T)::Int64 where {T <: Cuboid}
+function ndims(x::T)::Int64 where {T <: Box}
     return x.ndims
 end
 
-function copy(x::T) where {T <: Cuboid}
+function copy(x::T) where {T <: Box}
     return typeof(x)(x.lims, x.ndims)
 end
