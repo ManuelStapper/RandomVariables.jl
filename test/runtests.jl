@@ -1,4 +1,4 @@
-boxusing RandomVariables
+using RandomVariables
 using Test
 using Distributions
 
