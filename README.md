@@ -18,7 +18,9 @@ Distributions.jl package. Scope of the package:
 Currently only available via GitHub.
 ```
 julia> import Pkg
+julia> Pkg.add("Distributions")
 julia> Pkg.add(url = "https://github.com/ManuelStapper/RandomVariables.jl")
+julia> using RandomVariables, Distributions
 ```
 
 ### Random variables
@@ -87,7 +89,7 @@ P(A|B)
 
 Mean, variance, skewness and kurtosis functions from the Distributions.jl package
 can also be applied to random variables. Further, a short notation for the mean
-``E(X)`` is added.
+``E(X)`` is added. This does not yet include transformed random variables. 
 
 Example
 ```
