@@ -139,6 +139,10 @@ end
     event(X, (z -> cc(z, z)).(collect(y)))
 end
 
+(in)(X::RV, y::Interval) = begin
+    event([X], [y])
+end
+
 # Random variable on the right hand side
 (<)(y::T, X::RV) where {T <: Real} = begin
     X > y
@@ -207,6 +211,10 @@ end
 
 (in)(X::T, y::StepRangeLen) where {T <: UnivariateDistribution} = begin
     event(RV(X), (z -> cc(z, z)).(collect(y)))
+end
+
+(in)(X::T, y::Interval) where {T <: UnivariateDistribution} = begin
+    event(RV(X), [y])
 end
 
 
