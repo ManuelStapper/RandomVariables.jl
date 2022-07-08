@@ -49,20 +49,41 @@ end
 # Gives out disjoint intervals whose union forms the real line and both
 # input intervals are element of the output vector
 """
-    unionDisjoint(x::Interval, y::Interval)
+    unionDisjoint(x::Vector{Interval})
 
-A function that splits the real numbers into disjoint intervals such that the
-intervals `x` and `y` are elements of the output.
+A function that splits the real numbers into disjoint intervals such that each
+interval in `x` has a representation as union of a subset of them.
 """
-function unionDisjoint(x::T1, y::T2)::Vector{Interval} where {T1, T2 <: Interval}
-    out = unique([x ∩ y; xor(x, y); not(x ∪ y)])
-    keep = out .!= [emptyset()]
-    if any(keep)
-        return out[keep]
-    else
-        return [emptyset()]
+# function unionDisjoint(x::T1, y::T2)::Vector{Interval} where {T1, T2 <: Interval}
+#     out = unique([x ∩ y; xor(x, y); not(x ∪ y)])
+#     keep = out .!= [emptyset()]
+#     return out[keep]
+# end
+
+function unionDisjoint(x::Vector{T1})::Vector{Interval} where {T1 <: Interval}
+    if length(x) == 1
+        return x
     end
+    out = unique([x[1] ∩ x[2]; xor(x[1], x[2]); not(x[1] ∪ x[2])])
+    # Adding intervals successively
+    for i = 3:length(x)
+        keep = fill(true, length(out))
+        add = Vector{Interval}([])
+        for j = 1:length(out)
+            inter = out[j] ∩ x[i]
+            if inter != emptyset()
+                add = [add; inter; out[j]\x[i]]
+                # push!(add, inter, out[j] \ x[i])
+                keep[j] = false
+            end
+        end
+        out = [out[keep]; add]
+    end
+    keep = out .!= [emptyset()]
+    return out[keep]
 end
+
+
 
 """
     increase(current::Vector{Int64}, n::Vector{Int64})
@@ -130,7 +151,7 @@ function mergeBox(x::T1, y::T2)::Vector{Box} where {T1, T2 <: Box}
     return [x, y]
 end
 
-# another helper function
+# another helper function, needed?
 function mergeOne(x::Vector{T1}) where {T1 <: Box}
     if length(x) == 1
         return x
@@ -275,6 +296,7 @@ end
 # to create non-overlapping boxes and directly return it
 # Repeat steps until there is no overlap anymore
 # Helper function
+# needed?
 function resolveOverlap(x::Vector{T1})::Vector{Box} where {T1 <: Box}
     n = length(x)
     if length(unique((z -> z.ndims).(x))) != 1
@@ -312,23 +334,77 @@ disjoint boxes, such that their union equals the union of `x`and `y`.
 If `merge` is `true`, the elements of the resulting vector are checked if they
 can be merged.
 """
-function union(x::Vector{T1}, y::Vector{T2}, merge::Bool = true)::Vector{Box} where {T1, T2 <: Box}
-    out = [x; y]
-    while true
-        nOld = length(out)
-        out = resolveOverlap(out)
-        if length(out) == nOld
-            break
+# function union(x::Vector{T1}, y::Vector{T2}, merge::Bool = true)::Vector{Box} where {T1, T2 <: Box}
+#     out = [x; y]
+#     while true
+#         nOld = length(out)
+#         out = resolveOverlap(out)
+#         if length(out) == nOld
+#             break
+#         end
+#     end
+#     return reduce(out, merge)
+# end
+
+# New version
+function union(x::Vector{T1}, merge::Bool = true)::Vector{Box} where {T1 <: Box}
+    if length(unique((z -> z.ndims).(x))) != 1
+        error("Invalid dimensions")
+    end
+    # Number of random variables
+    nRV = x[1].ndims
+    nBox = length(x)
+    if nBox == 1
+        return x
+    end
+
+    # For each dimension, divide the real line into disjoint intervals
+    # with the two intervals being element of the partitioning
+    allInts = Vector{Vector{Interval}}(undef, nRV)
+    for i = 1:nRV
+        intTemp = (j -> x[j].lims[i]).(1:length(x))
+        allInts[i] = unionDisjoint(intTemp)
+    end
+
+    nInts = length.(allInts)
+    out = Vector{Box}(undef, prod(nInts))
+
+    # Take one interval of each dimensions partition and build a box from them
+    ind = ones(Int64, nRV)
+    ind[end] = 0
+    for counter = 1:prod(nInts)
+        ind = increase(ind, nInts)
+        temp = Vector{Interval}(undef, nRV)
+        for j = 1:nRV
+            temp[j] = allInts[j][ind[j]]
+        end
+        out[counter] = box(temp)
+    end
+
+    # Then check which boxes are inside one of the boxes in x
+    keep = fill(false, length(out))
+    for i = 1:length(out)
+        if !any(out[i].lims .== [emptyset()])
+            for j = 1:nBox
+                if issubset(out[i], x[j])
+                    keep[i] = true
+                end
+            end
         end
     end
-    return reduce(out, merge)
+
+    return reduce(out[keep], merge)
+end
+
+function union(x::Vector{T1}, y::Vector{T2}, merge::Bool = true)::Vector{Box} where {T1, T2 <: Box}
+    return union([x; y], merge)
 end
 
 function union(x::Vector{T1}, y::T2, merge::Bool = true)::Vector{Box} where {T1, T2 <: Box}
-    return union(x, [y], merge)
+    return union([x; y], merge)
 end
 function union(x::T1, y::Vector{T2}, merge::Bool = true)::Vector{Box} where {T1, T2 <: Box}
-    return union([x], y, merge)
+    return union([x; y], merge)
 end
 
 """
