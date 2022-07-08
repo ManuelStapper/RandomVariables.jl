@@ -9,6 +9,7 @@ import Base.!, Base.|, Base.&, Base.⊻
 import Base.+, Base.-, Base.*, Base./, Base.inv, Base.exp, Base.log, Base.sqrt
 import Base.abs, Base.^, Base.adjoint
 import Distributions.mean, Distributions.var, Distributions.skewness, Distributions.kurtosis
+import Distributions.std
 
 include("interval.jl")
 include("subset.jl")
@@ -29,6 +30,6 @@ export emptyset, ∅, cc, oo, co, oc, length, iterate, copy, Box
 export box, rect, ndims, <, <= , >, >=, ==, !=, in, !, &, |, ∨, ⊻
 export P, RandomVariable, RV, RVtransformed, unionDisjoint, reduce
 export union, issubset, +, -, *, /, inv, exp, log, sqrt, abs, adjoint, ^
-export mean, var, E, skewness, kurtosis
+export mean, var, E, skewness, kurtosis, std
 
 end

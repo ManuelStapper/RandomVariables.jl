@@ -10,6 +10,10 @@ function var(x::RV)
     return Distributions.var(x.distr)
 end
 
+function std(x::RV)
+    return Distributions.std(x.distr)
+end
+
 function skewness(x::RV)
     return Distributions.skewness(x.distr)
 end
