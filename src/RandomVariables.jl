@@ -10,7 +10,6 @@ import Base.+, Base.-, Base.*, Base./, Base.inv, Base.exp, Base.log, Base.sqrt
 import Base.abs, Base.^, Base.adjoint
 import Distributions.mean, Distributions.var, Distributions.skewness
 import Distributions.kurtosis, Distributions.std
-import Statistics.mean, Statistics.var, StatsBase.skewness, StatsBase.kurtosis
 
 include("interval.jl")
 include("subset.jl")
