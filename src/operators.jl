@@ -2,8 +2,6 @@
 """
     <(X::RV, y::Real)
     <(y::Real, X::RV)
-    <(X::UnivariateDistribution, y::Real)
-    <(y::Real, X::UnivariateDistribution)
     <(X::RVtransformed, y::Real)
     <(y::Real, X::RVtransformed)
     X < y
@@ -20,8 +18,6 @@ end
 """
     <=(X::RV, y::Real)
     <=(y::Real, X::RV)
-    <=(X::UnivariateDistribution, y::Real)
-    <=(y::Real, X::UnivariateDistribution)
     <=(X::RVtransformed, y::Real)
     <=(y::Real, X::RVtransformed)
     X <= y
@@ -39,8 +35,6 @@ end
 """
     >(X::RV, y::Real)
     >(y::Real, X::RV)
-    >(X::UnivariateDistribution, y::Real)
-    >(y::Real, X::UnivariateDistribution)
     >(X::RVtransformed, y::Real)
     >(y::Real, X::RVtransformed)
     X > y
@@ -57,8 +51,6 @@ end
 """
     >=(X::RV, y::Real)
     >=(y::Real, X::RV)
-    >=(X::UnivariateDistribution, y::Real)
-    >=(y::Real, X::UnivariateDistribution)
     >=(X::RVtransformed, y::Real)
     >=(y::Real, X::RVtransformed)
     X >= y
@@ -76,8 +68,6 @@ end
 """
     ==(X::RV, y::Real)
     ==(y::Real, X::RV)
-    ==(X::UnivariateDistribution, y::Real)
-    ==(y::Real, X::UnivariateDistribution)
     ==(X::RVtransformed, y::Real)
     ==(y::Real, X::RVtransformed)
     X == y
@@ -94,8 +84,6 @@ end
 """
     !=(X::RV, y::Real)
     !=(y::Real, X::RV)
-    !=(X::UnivariateDistribution, y::Real)
-    !=(y::Real, X::UnivariateDistribution)
     !=(X::RVtransformed, y::Real)
     !=(y::Real, X::RVtransformed)
     X != y
@@ -113,7 +101,6 @@ end
 
 """
     in(X::RV, y)
-    in(X::UnivariateDistribution, y)
     in(X::RVtransformed, y)
     X ∈ y
     X ∉ y
@@ -173,75 +160,75 @@ end
 # create a new random variable
 
 # Random variable on the left hand side
-(<)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    event(RV(X), oo(-Inf, y))
-end
-
-(<=)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    event(RV(X), oc(-Inf, y))
-end
-
-(>)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    event(RV(X), oo(y, Inf))
-end
-
-(>=)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    event(RV(X), co(y, Inf))
-end
-
-(==)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    event(RV(X), cc(y, y))
-end
-
-(!=)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    event(RV(X), not(cc(y, y)))
-end
-
-(in)(X::T1, y::Vector{T2}) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    event(RV(X), (z -> cc(z, z)).(y))
-end
-
-(in)(X::T, y::UnitRange) where {T <: UnivariateDistribution} = begin
-    event(RV(X), (z -> cc(z, z)).(collect(y)))
-end
-
-(in)(X::T, y::StepRange) where {T <: UnivariateDistribution} = begin
-    event(RV(X), (z -> cc(z, z)).(collect(y)))
-end
-
-(in)(X::T, y::StepRangeLen) where {T <: UnivariateDistribution} = begin
-    event(RV(X), (z -> cc(z, z)).(collect(y)))
-end
-
-(in)(X::T, y::Interval) where {T <: UnivariateDistribution} = begin
-    event(RV(X), [y])
-end
+# (<)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     event(RV(X), oo(-Inf, y))
+# end
+#
+# (<=)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     event(RV(X), oc(-Inf, y))
+# end
+#
+# (>)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     event(RV(X), oo(y, Inf))
+# end
+#
+# (>=)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     event(RV(X), co(y, Inf))
+# end
+#
+# (==)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     event(RV(X), cc(y, y))
+# end
+#
+# (!=)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     event(RV(X), not(cc(y, y)))
+# end
+#
+# (in)(X::T1, y::Vector{T2}) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     event(RV(X), (z -> cc(z, z)).(y))
+# end
+#
+# (in)(X::T, y::UnitRange) where {T <: UnivariateDistribution} = begin
+#     event(RV(X), (z -> cc(z, z)).(collect(y)))
+# end
+#
+# (in)(X::T, y::StepRange) where {T <: UnivariateDistribution} = begin
+#     event(RV(X), (z -> cc(z, z)).(collect(y)))
+# end
+#
+# (in)(X::T, y::StepRangeLen) where {T <: UnivariateDistribution} = begin
+#     event(RV(X), (z -> cc(z, z)).(collect(y)))
+# end
+#
+# (in)(X::T, y::Interval) where {T <: UnivariateDistribution} = begin
+#     event(RV(X), [y])
+# end
 
 
 # Random variable on the right hand side
-(<)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    X > y
-end
-
-(<=)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    X >= y
-end
-
-(>)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    X < y
-end
-
-(>=)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    X <= y
-end
-
-(==)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    X == y
-end
-
-(!=)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    X != y
-end
+# (<)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     X > y
+# end
+#
+# (<=)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     X >= y
+# end
+#
+# (>)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     X < y
+# end
+#
+# (>=)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     X <= y
+# end
+#
+# (==)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     X == y
+# end
+#
+# (!=)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     X != y
+# end
 
 
 # Operators involving one event

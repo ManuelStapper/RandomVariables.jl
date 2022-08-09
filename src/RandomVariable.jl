@@ -57,5 +57,6 @@ with `X`, i.e. A = `fInv(B)` such that P(X ∈ A) = P(Y ∈ B) for an arbitrary 
 struct RVtransformed <: RandomVariable
     distr::UnivariateDistribution
     id::Int64
+    f::Function
     fInv::Function
 end

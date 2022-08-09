@@ -9,6 +9,9 @@ Z = X + y. Instead of a random variable, a distribution can be provided and a
 new random variable is created.
 """
 (+)(X::T1, y::T2) where {T1 <: RandomVariable, T2 <: Real} = begin
+    f = function(z::T3) where {T3 <: Real};
+        z + y
+    end
     fInv = function(z::Vector{T3}) where {T3 <: Interval};
         out = Vector{Interval}(undef, length(z))
         for i = 1:length(z)
@@ -21,9 +24,9 @@ new random variable is created.
         return union(out)
     end
     if typeof(X) == RV
-        RVtransformed(X.distr, X.id, fInv)
+        return RVtransformed(X.distr, X.id, f, fInv)
     else
-        return RVtransformed(X.distr, X.id, X.fInv ∘ fInv)
+        return RVtransformed(X.distr, X.id, f ∘ X.f, X.fInv ∘ fInv)
     end
 end
 
@@ -42,6 +45,9 @@ Z = X * y. Instead of a random variable, a distribution can be provided and a
 new random variable is created.
 """
 (*)(X::T1, y::T2) where {T1 <: RandomVariable, T2 <: Real} = begin
+    f = function(z::T3) where {T3 <: Real};
+        z * y
+    end
     if y != 0
         fInv = function(z::Vector{T3}) where {T3 <: Interval}
             out = Vector{Interval}(undef, length(z))
@@ -68,9 +74,9 @@ new random variable is created.
     end
 
     if typeof(X) == RV
-        return RVtransformed(X.distr, X.id, fInv)
+        return RVtransformed(X.distr, X.id, f, fInv)
     else
-        return RVtransformed(X.distr, X.id, X.fInv ∘ fInv)
+        return RVtransformed(X.distr, X.id, f ∘ X.f, X.fInv ∘ fInv)
     end
 end
 
@@ -107,6 +113,9 @@ Z = X^{-1}. Instead of a random variable, a distribution can be provided and a
 new random variable is created.
 """
 function inv(X::T) where {T <: RandomVariable}
+    f = function(z::T3) where {T3 <: Real};
+        1/z
+    end
     if typeof(X) == RV
         if typeof(X.distr) <: DiscreteDistribution
             if pdf(X.distr, 0) > 0
@@ -143,9 +152,9 @@ function inv(X::T) where {T <: RandomVariable}
             return union(vec(out))
     end
     if typeof(X) == RV
-        return RVtransformed(X.distr, X.id, fInv)
+        return RVtransformed(X.distr, X.id, f, fInv)
     else
-        return RVtransformed(X.distr, X.id, X.fInv ∘ fInv)
+        return RVtransformed(X.distr, X.id, f ∘ X.f, X.fInv ∘ fInv)
     end
 end
 
@@ -184,6 +193,9 @@ Z = exp(X). Instead of a random variable, a distribution can be provided and a
 new random variable is created.
 """
 function exp(X::T) where {T <: RandomVariable}
+    f = function(z::T3) where {T3 <: Real};
+        exp(z)
+    end
     fInv = function(z::Vector{T2}) where {T2 <: Interval}
             out = Vector{Interval}(undef, length(z))
             for i = 1:length(z)
@@ -204,9 +216,9 @@ function exp(X::T) where {T <: RandomVariable}
             return union(out)
     end
     if typeof(X) == RV
-        return RVtransformed(X.distr, X.id, fInv)
+        return RVtransformed(X.distr, X.id, f, fInv)
     else
-        return RVtransformed(X.distr, X.id, X.fInv ∘ fInv)
+        return RVtransformed(X.distr, X.id, f ∘ X.f, X.fInv ∘ fInv)
     end
 end
 
@@ -218,6 +230,9 @@ Z = log(X). Instead of a random variable, a distribution can be provided and a
 new random variable is created.
 """
 function log(X::T) where {T <: RandomVariable}
+    f = function(z::T3) where {T3 <: Real};
+        log(z)
+    end
     if typeof(X) == RV
         if minimum(X.distr) < 0
             error("Invalid distribution")
@@ -239,9 +254,9 @@ function log(X::T) where {T <: RandomVariable}
             return union(out)
     end
     if typeof(X) == RV
-        return RVtransformed(X.distr, X.id, fInv)
+        return RVtransformed(X.distr, X.id, f, fInv)
     else
-        return RVtransformed(X.distr, X.id, X.fInv ∘ fInv)
+        return RVtransformed(X.distr, X.id, f ∘ X.f, X.fInv ∘ fInv)
     end
 end
 
@@ -253,6 +268,9 @@ Z = sqrt(X). Also works as √X. Instead of a random variable, a distribution ca
 be provided and a new random variable is created.
 """
 function sqrt(X::T) where {T <: RandomVariable}
+    f = function(z::T3) where {T3 <: Real};
+        sqrt(z)
+    end
     if typeof(X) == RV
         if minimum(X.distr) < 0
             error("Invalid distribution")
@@ -282,9 +300,9 @@ function sqrt(X::T) where {T <: RandomVariable}
             return union(out)
     end
     if typeof(X) == RV
-        return RVtransformed(X.distr, X.id, fInv)
+        return RVtransformed(X.distr, X.id, f, fInv)
     else
-        return RVtransformed(X.distr, X.id, X.fInv ∘ fInv)
+        return RVtransformed(X.distr, X.id, f ∘ X.f, X.fInv ∘ fInv)
     end
 end
 
@@ -296,6 +314,9 @@ Z = |X|. Instead of a random variable, a distribution can be provided and a
 new random variable is created.
 """
 function abs(X::T) where {T <: RandomVariable}
+    f = function(z::T3) where {T3 <: Real};
+        abs(z)
+    end
     fInv = function(z::Vector{T2}) where {T2 <: Interval}
             out = Matrix{Interval}(fill(emptyset(), length(z), 2))
             for i = 1:length(z)
@@ -317,15 +338,18 @@ function abs(X::T) where {T <: RandomVariable}
             return union(vec(out))
     end
     if typeof(X) == RV
-        return RVtransformed(X.distr, X.id, fInv)
+        return RVtransformed(X.distr, X.id, f, fInv)
     else
-        return RVtransformed(X.distr, X.id, X.fInv ∘ fInv)
+        return RVtransformed(X.distr, X.id, f ∘ X.f, X.fInv ∘ fInv)
     end
 end
 
 
 # Internal
 function powI(X::T, y::Integer) where {T <: RandomVariable}
+    f = function(z::T3) where {T3 <: Real};
+        z^y
+    end
     if iseven(y)
         fInv = function(z::Vector{T2}) where {T2 <: Interval}
                 out = Matrix{Interval}(fill(emptyset(), length(z), 2))
@@ -362,13 +386,16 @@ function powI(X::T, y::Integer) where {T <: RandomVariable}
     end
 
     if typeof(X) == RV
-        return RVtransformed(X.distr, X.id, fInv)
+        return RVtransformed(X.distr, X.id, f, fInv)
     else
-        return RVtransformed(X.distr, X.id, X.fInv ∘ fInv)
+        return RVtransformed(X.distr, X.id, f ∘ X.f, X.fInv ∘ fInv)
     end
 end
 
 function powF(X::T, y::Float64) where {T <: RandomVariable}
+    f = function(z::T3) where {T3 <: Real};
+        z^y
+    end
     if typeof(X) == RV
         if minimum(X.distr) < 0
             error("Invalid distribution")
@@ -400,9 +427,9 @@ function powF(X::T, y::Float64) where {T <: RandomVariable}
     end
 
     if typeof(X) == RV
-        return RVtransformed(X.distr, X.id, fInv)
+        return RVtransformed(X.distr, X.id, f, fInv)
     else
-        return RVtransformed(X.distr, X.id, X.fInv ∘ fInv)
+        return RVtransformed(X.distr, X.id, f ∘ X.f, X.fInv ∘ fInv)
     end
 end
 
@@ -477,6 +504,10 @@ end
 
 (in)(X::RVtransformed, y::StepRangeLen) = begin
     event(RV(X.distr, X.id), X.fInv((z -> cc(z, z)).(collect(y))))
+end
+
+(in)(X::RVtransformed, y::Interval) = begin
+    event(RV(X.distr, X.id), X.fInv([y]))
 end
 
 # Random variable on the right hand side

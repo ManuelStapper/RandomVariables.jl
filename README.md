@@ -15,11 +15,11 @@ Distributions.jl package. Scope of the package:
 
 
 #### Installation
-Currently only available via GitHub.
+Distributions.jl package must be installed and loaded to use RandomVariables.jl
 ```
 julia> import Pkg
 julia> Pkg.add("Distributions")
-julia> Pkg.add(url = "https://github.com/ManuelStapper/RandomVariables.jl")
+julia> Pkg.add("RandomVariables")
 julia> using RandomVariables, Distributions
 ```
 
@@ -29,14 +29,14 @@ To define a random variable, the function ``RV()`` takes any univariate distribu
 from the Distributions.jl package and equips it with an ID.
 ```
 X = RV(Normal())
-Y = Poisson(4)
+Y = RV(Poisson(4))
 ```
 
 #### Transformation of random variables
 
 Random variables can be transformed. Say you transform a random variable X by
 a function h(x), i.e. Z = f(X). The object ``RVtransformed`` stores the distribution
-of the original random variable X, its id and the inverse of the transformation
+of the original random variable X, its ID, the function h and the inverse of the transformation
 function. Implemented transformations for a real valued ``y`` are: ``X + y``,
 ``X - y``, ``X * y``, ``X / y``, ``inv(X)``, ``abs(X)``, ``exp(X)``, ``log(X)``,
 ``sqrt(X)`` and ``X^y``.
@@ -89,21 +89,11 @@ P(A|B)
 
 Mean, variance, skewness and kurtosis functions from the Distributions.jl package
 can also be applied to random variables. Further, a short notation for the mean
-``E(X)`` is added. This does not yet include transformed random variables. 
+``E(X)`` is added.
 
 Example
 ```
 P((X - E(X))^2 < 3)
-```
-
-### Shortcut
-
-To use above methods it is not always needed to define a random variable using
-the ``RV`` function. If only used once, events can be create with only the
-distribution.
-```
-P(Normal(1, 2) > 1)
-P(abs(Normal()) < 1.96)
 ```
 
 ### Outlook
