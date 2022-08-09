@@ -38,7 +38,7 @@ function myexp(f::Function, d::ContinuousDistribution)
 end
 
 function mean(x::RVtransformed)
-    myexp(x.f, x.d)
+    myexp(x.f, x.distr)
 end
 
 function E(x::RVtransformed)
