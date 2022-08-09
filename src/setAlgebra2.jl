@@ -54,11 +54,11 @@ end
 A function that splits the real numbers into disjoint intervals such that each
 interval in `x` has a representation as union of a subset of them.
 """
-# function unionDisjoint(x::T1, y::T2)::Vector{Interval} where {T1, T2 <: Interval}
-#     out = unique([x ∩ y; xor(x, y); not(x ∪ y)])
-#     keep = out .!= [emptyset()]
-#     return out[keep]
-# end
+function unionDisjoint(x::T1, y::T2)::Vector{Interval} where {T1, T2 <: Interval}
+    out = unique([x ∩ y; xor(x, y); not(x ∪ y)])
+    keep = out .!= [emptyset()]
+    return out[keep]
+end
 
 function unionDisjoint(x::Vector{T1})::Vector{Interval} where {T1 <: Interval}
     if length(x) == 1
