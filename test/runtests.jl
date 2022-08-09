@@ -26,7 +26,7 @@ using Distributions
     not(not(cc(1, 2)))
 
 
-    d = Poisson(1)
+    d = RV(Poisson(1))
     d in 1:10
     d in 1:1:10
     d in 1:0.5:10
@@ -60,9 +60,9 @@ using Distributions
     X4 in 1:0.5:10
     X4 in [1, 2]
 
-    inv(Exponential(2))
+    inv(RV(Exponential(2)))
     exp(d)
-    sqrt(Exponential(2))
+    sqrt(RV(Exponential(2)))
     abs(d)
     d^3
 
