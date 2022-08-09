@@ -1,6 +1,6 @@
 module RandomVariables
 
-using Distributions
+using Distributions, QuadGK
 
 import Base.\, Base.diff, Base.intersect, Base.length, Base.iterate
 import Base.copy, Base.ndims, Base.reduce, Base.issubset, Base.union, Base.xor

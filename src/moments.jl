@@ -23,17 +23,22 @@ function kurtosis(x::RV)
 end
 
 # There seems to be a problem with Distributions.expectation for discrete RVs?!
-function myexp(f, d)
+function myexp(f, d::DiscreteDistribution)
     sup = collect(quantile(d, 1e-10):quantile(d, 1 - 1e-10))
     return sum(pdf.(d, sup).*f.(sup))
 end
 
+function myexp(f::Function, d::DiscreteDistribution)
+    sup = collect(quantile(d, 1e-10):quantile(d, 1 - 1e-10))
+    return sum(pdf.(d, sup).*f.(sup))
+end
+
+function myexp(f::Function, d::ContinuousDistribution)
+    quadgk(x -> f(x)*pdf(d, x), minimum(d), maximum(d))[1]
+end
+
 function mean(x::RVtransformed)
-    if typeof(x.distr) <: ContinuousUnivariateDistribution
-        return Distributions.expectation(x.f, x.distr)
-    elseif typeof(x.distr) <: DiscreteUnivariateDistribution
-        return myexp(x.f, x.distr)
-    end
+    myexp(x.f, x.d)
 end
 
 function E(x::RVtransformed)
