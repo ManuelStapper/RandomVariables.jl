@@ -3,9 +3,9 @@ using Test
 using Distributions
 
 @testset "RandomVariables.jl" begin
-    X1 = RV(RandomVariables.Poisson(4.2))
-    X2 = RV(RandomVariables.Normal())
-    X3 = RV(RandomVariables.Normal(1, 2))
+    X1 = RV(Poisson(4.2))
+    X2 = RV(Normal())
+    X3 = RV(Normal(1, 2))
 
     A = (X1 in 1:5) & (X2 < 3) & (X2 > 0)
     B = (X1 != 2) & (log(abs(X3) + 1) < 2)
@@ -15,7 +15,7 @@ using Distributions
     P(A & B)
     P(A ∨ B)
     A \ B
-    P(A ⊻ B)
+    # P(A ⊻ B)
     P(!(A))
 
     not(cc(1, 2))
@@ -113,10 +113,10 @@ using Distributions
     A1 \ B
     A \ B1
 
-    A1 ⊻ B1
-    A ⊻ B
-    A ⊻ B1
-    A1 ⊻ B
+    # A1 ⊻ B1
+    # A ⊻ B
+    # A ⊻ B1
+    # A1 ⊻ B
 
     for t1 = [cc, co, oc, oo], t2 = [cc, co, oc, oo]
         for i1 = 1:4, i2 = 1:4, i3 = 1:4, i4 = 1:4
