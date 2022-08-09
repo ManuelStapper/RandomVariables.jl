@@ -30,7 +30,7 @@ end
 
 function mean(x::RVtransformed)
     if typeof(x.distr) <: ContinuousUnivariateDistribution
-        return Disexpectation(x.f, x.distr)
+        return Distributions.expectation(x.f, x.distr)
     elseif typeof(x.distr) <: DiscreteUnivariateDistribution
         return myexp(x.f, x.distr)
     end
