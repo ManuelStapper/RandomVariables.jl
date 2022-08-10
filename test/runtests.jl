@@ -15,7 +15,7 @@ using Distributions
     P(A & B)
     P(A ∨ B)
     A \ B
-    # P(A ⊻ B)
+    P(A ⊻ B)
     P(!(A))
 
     not(cc(1, 2))
@@ -113,10 +113,10 @@ using Distributions
     A1 \ B
     A \ B1
 
-    # A1 ⊻ B1
-    # A ⊻ B
-    # A ⊻ B1
-    # A1 ⊻ B
+    A1 ⊻ B1
+    A ⊻ B
+    A ⊻ B1
+    A1 ⊻ B
 
     for t1 = [cc, co, oc, oo], t2 = [cc, co, oc, oo]
         for i1 = 1:4, i2 = 1:4, i3 = 1:4, i4 = 1:4
@@ -150,4 +150,9 @@ using Distributions
     C1 \ C1
     xor(C1, C3)
     not(C1)
+
+    X = RV(Poisson(5))
+    Y = Normal()
+    E(log(X+1))
+    E(Y^2)
 end
