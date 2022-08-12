@@ -152,7 +152,7 @@ using Distributions
     not(C1)
 
     X = RV(Poisson(5))
-    Y = Normal()
+    Y = RV(Normal())
     E(log(X+1))
     E(Y^2)
 
