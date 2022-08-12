@@ -89,21 +89,27 @@ P(A|B)
 
 Mean, variance, skewness and kurtosis functions from the Distributions.jl package
 can also be applied to random variables. Further, a short notation for the mean
-``E(X)`` is added.
+``E(X)`` is added. The mean of a transformed random variable is computed by numerical integration / summation.
 
 Example
 ```
 P((X - E(X))^2 < 3)
+E(log(Y + 1))
 ```
 
 ### Outlook
 
-* A more detailed documentation will be published soon
-* More arithmetic on random variables: ``X + Y``, ...
-* Inclusion of dependent random variables in general
+#### Short term
+* A more detailed documentation
+* Conditional moments, i.e. ``E(X | X > 1)``
+* Shift to Intervals.jl (?)
+* Minimum and maximum, i.e. ``Z = minimum(X, Y)``
 * Transfer more functionalities of Distributions.jl to random variables?
 * Plotting functions?
 
+#### Long term
+* More arithmetic on random variables: ``X + Y``, ...
+* Inclusion of dependent random variables in general
 
 ### References
 
