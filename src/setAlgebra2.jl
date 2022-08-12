@@ -62,7 +62,7 @@ end
 
 function unionDisjoint(x::Vector{T1})::Vector{Interval} where {T1 <: Interval}
     if length(x) == 1
-        return x
+        return unionDisjoint(x[1])
     end
     out = unique([x[1] ∩ x[2]; xor(x[1], x[2]); not(x[1] ∪ x[2])])
     # Adding intervals successively

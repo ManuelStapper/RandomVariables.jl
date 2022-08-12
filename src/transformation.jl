@@ -536,64 +536,64 @@ end
 end
 
 # And agin the lazy way where random variables are created on the fly
-(+)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    RV(X) + y
-end
-(+)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    RV(X) + y
-end
-
-(-)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    RV(X) - y
-end
-(-)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    RV(X) - y
-end
-(-)(X::T1) where {T1 <: UnivariateDistribution} = begin
-    RV(X)*(-1)
-end
-(-)(X::T1) where {T1 <: RandomVariable} = begin
-    X*(-1)
-end
-
-(*)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    RV(X) * y
-end
-(*)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    RV(X) + y
-end
-
-(/)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    if y == 0
-        error("Division by zero")
-    end
-    RV(X)/y
-end
-
-(/)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    y/RV(X)
-end
-
-function inv(X::T) where {T <: UnivariateDistribution}
-    inv(RV(X))
-end
-
-function exp(X::T) where {T <: UnivariateDistribution}
-    exp(RV(X))
-end
-
-function log(X::T) where {T <: UnivariateDistribution}
-    log(RV(X))
-end
-
-function sqrt(X::T) where {T <: UnivariateDistribution}
-    sqrt(RV(X))
-end
-
-function abs(X::T) where {T <: UnivariateDistribution}
-    abs(RV(X))
-end
-
-(^)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
-    RV(X)^y
-end
+# (+)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     RV(X) + y
+# end
+# (+)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     RV(X) + y
+# end
+#
+# (-)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     RV(X) - y
+# end
+# (-)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     RV(X) - y
+# end
+# (-)(X::T1) where {T1 <: UnivariateDistribution} = begin
+#     RV(X)*(-1)
+# end
+# (-)(X::T1) where {T1 <: RandomVariable} = begin
+#     X*(-1)
+# end
+#
+# (*)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     RV(X) * y
+# end
+# (*)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     RV(X) + y
+# end
+#
+# (/)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     if y == 0
+#         error("Division by zero")
+#     end
+#     RV(X)/y
+# end
+#
+# (/)(y::T2, X::T1) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     y/RV(X)
+# end
+#
+# function inv(X::T) where {T <: UnivariateDistribution}
+#     inv(RV(X))
+# end
+#
+# function exp(X::T) where {T <: UnivariateDistribution}
+#     exp(RV(X))
+# end
+#
+# function log(X::T) where {T <: UnivariateDistribution}
+#     log(RV(X))
+# end
+#
+# function sqrt(X::T) where {T <: UnivariateDistribution}
+#     sqrt(RV(X))
+# end
+#
+# function abs(X::T) where {T <: UnivariateDistribution}
+#     abs(RV(X))
+# end
+#
+# (^)(X::T1, y::T2) where {T1 <: UnivariateDistribution, T2 <: Real} = begin
+#     RV(X)^y
+# end

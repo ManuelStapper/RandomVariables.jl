@@ -23,10 +23,10 @@ function kurtosis(x::RV)
 end
 
 # There seems to be a problem with Distributions.expectation for discrete RVs?!
-function myexp(f, d::DiscreteDistribution)
-    sup = collect(quantile(d, 1e-10):quantile(d, 1 - 1e-10))
-    return sum(pdf.(d, sup).*f.(sup))
-end
+# function myexp(f, d::DiscreteDistribution)
+#     sup = collect(quantile(d, 1e-10):quantile(d, 1 - 1e-10))
+#     return sum(pdf.(d, sup).*f.(sup))
+# end
 
 function myexp(f::Function, d::DiscreteDistribution)
     sup = collect(quantile(d, 1e-10):quantile(d, 1 - 1e-10))

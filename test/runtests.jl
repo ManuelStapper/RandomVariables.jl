@@ -155,4 +155,89 @@ using Distributions
     Y = Normal()
     E(log(X+1))
     E(Y^2)
+
+    X*0
+    1 - X
+    X/2
+    exp(X+1)
+    log(RV(Exponential(1)))
+    P(X^2 > 1)
+    log(X)^2
+    abs(X)^1.2
+    exp(X) ∈ cc(1, 2)
+
+    cc(1, Inf)
+    cc(-Inf, 1)
+    cc(-Inf, Inf)
+    oo(Inf, Inf)
+    co(Inf, Inf)
+    co(-Inf, 1)
+    oc(Inf, Inf)
+    oc(1, Inf)
+    copy(emptyset())
+
+    b = box([cc(1, 2), cc(1, 2)])
+    b2 = box([cc(1, 2), cc(1, 2), cc(1, 2)])
+    length(b)
+    iterate(b)
+    iterate(b, nothing)
+    ndims(b)
+
+    cc(1, 2) ⊆ emptyset()
+    emptyset() ⊆ cc(1, 2)
+    emptyset() ⊆ emptyset()
+    cc(1, 2) ⊆ co(1, 2)
+    cc(1, 2) ⊆ co(1, 3)
+    oo(1, 2) ⊆ co(0, 3)
+
+    co(1, 2) ⊆ cc(1, 2)
+    co(0, 3) ⊆ cc(1, 2)
+
+    co(1, 2) ⊆ oc(0, 3)
+    oc(1, 2) ⊆ cc(0, 3)
+    oc(1, 2) ⊆ co(0, 3)
+
+    b ⊆ b2
+    b ⊆ [b2]
+
+    P(Poisson(1), co(1, 2))
+    P(Poisson(1), co(-1, 2))
+    P(Binomial(5, 0.4), co(1, 7))
+    P(Binomial(5, 0.4), co(1, Inf))
+    P(Poisson(1), oc(0, Inf))
+
+    std(RV(Poisson(1)))
+    copy(RV(Poisson(1)))
+
+
+    X = RV(Poisson(1))
+    Y = RV(Poisson(1))
+    A = (X > 2) & (Y > 1)
+    B = (Y > 0) & (X > 1)
+    B = event(B.X[[2, 1]], B.boxes)
+    A | B
+    RandomVariables.unionDisjoint(oo(-Inf, 1))
+    RandomVariables.unionDisjoint(co(1, Inf))
+    RandomVariables.unionDisjoint([co(1, Inf)])
+    RandomVariables.mergeBox(b, b)
+    RandomVariables.mergeBox(box(cc(1, 3)), box(cc(1, 2)))
+    RandomVariables.mergeOne([box(cc(1, 2))])
+    RandomVariables.resolveOverlap([box(cc(1, 2))])
+    RandomVariables.resolveOverlap([box(cc(1, 2)), box(cc(1, 2))])
+
+    b1 = box(cc(1, 2))
+    b2 = box(cc(3, 4))
+    b3 = box(cc(5, 6))
+
+    union(b1, [b2, b3])
+
+    intersect(b1, [b2, b3])
+    intersect([b2, b3], b1)
+
+    b1 \ [b2, b3]
+    [b2, b3] \ b1
+    [b2, b3] \ [b1]
+
+    xor(b1, [b2, b3])
+    xor([b2, b3], b1)
 end
