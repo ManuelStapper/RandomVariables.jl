@@ -2,6 +2,7 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/oxrt0pwdypo42ees?svg=true)](https://ci.appveyor.com/project/ManuelStapper/randomvariables-jl)
 [![Coverage](https://codecov.io/gh/ManuelStapper/RandomVariables.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/ManuelStapper/RandomVariables.jl)
+[![DOI](https://zenodo.org/badge/508331635.svg)](https://zenodo.org/badge/latestdoi/508331635)
 
 A Julia package for random variables and probabilities as an add-on to the
 Distributions.jl package. Scope of the package:
