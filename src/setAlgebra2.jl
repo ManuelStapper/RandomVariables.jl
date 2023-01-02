@@ -676,30 +676,3 @@ The complementary event of an event `A`.
 function not(A::event)::event
     return event(A.X, not(A.boxes))
 end
-
-"""
-    diff(A::event, B::event)::event
-    A \\ B
-
-Takes two events `A` and `B` and returns the event that `A` occurs while
-`B` does not.
-"""
-function diff(A::event, B::event)::event
-    A1, B1 = unifyEvents(A, B)
-    return event(A1.X, diff(A1.boxes, B1.boxes))
-end
-
-(\)(A::event, B::event)::event = begin
-    diff(A, B)
-end
-
-"""
-    xor(A::event, B::event)::event
-    A ⊻ B
-Symmetric difference of two events `A` and `B`. Gives the event that `A` occurs
-and `B` does not or that `B` occurs and `A` does not.
-"""
-function xor(A::event, B::event)
-    A1, B1 = unifyEvents(A, B)
-    return event(A1.X, xor(A1.boxes, B1.boxes))
-end

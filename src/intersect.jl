@@ -230,7 +230,7 @@ function intersect(x::emptyset, y::T)::Interval where {T <: Interval}
     return emptyset()
 end
 
-function intersect(x::emptyset, y::emptyset)::Interval where {T <: Interval}
+function intersect(x::emptyset, y::emptyset)::Interval
     return emptyset()
 end
 

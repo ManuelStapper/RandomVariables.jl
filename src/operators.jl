@@ -339,8 +339,6 @@ end
     intersect(A.of, not(B)) | A.given
 end
 
-
-
 """
     ⊻(A::event, B::event)
     ⊻(A::eventConditional, B::eventConditional)
