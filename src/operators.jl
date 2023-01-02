@@ -340,6 +340,7 @@ end
 end
 
 """
+    xor(A::event, B::event)
     ⊻(A::event, B::event)
     ⊻(A::eventConditional, B::eventConditional)
     ⊻(A::event, B::eventConditional)
@@ -350,15 +351,16 @@ Combination of two events. Returns the event that `A` occurs and `B` does not or
 In case of conditional events, say A1|A2 and B1|B2, the resulting event ist
 A1 ⊻ B1 | A2 ∩ B2.
 """
-(⊻)(A::event, B::event) = begin
-    xor(A, B)
+function xor(A::event, B::event)
+    A1, B1 = unifyEvents(A, B)
+    return event(A1.X, xor(A1.boxes, B1.boxes))
 end
-(⊻)(A::eventConditional, B::eventConditional) = begin
+function xor(A::eventConditional, B::eventConditional)
     xor(A.of, B.of) | intersect(A.given, B.given)
 end
-(⊻)(A::event, B::eventConditional) = begin
+function xor(A::event, B::eventConditional)
     xor(A, B.of) | B.given
 end
-(⊻)(A::eventConditional, B::event) = begin
+function xor(A::eventConditional, B::event)
     xor(A.of, B) | A.given
 end
